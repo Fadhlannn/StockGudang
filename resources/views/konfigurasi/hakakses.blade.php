@@ -13,56 +13,58 @@
                         </div>
                     </div>
 
-                    <div class="row">
-                        @foreach ($roleData as $index => $data)
-                            @if ($index % 3 == 0)
-                                </div><div class="row">
-                            @endif
-
-                            <div class="col-md-4">
-                                <div class="custom-card">
-                                    <div class="total">Total {{ $data['role']->role }}: {{ $data['total_users'] }}</div>
-                                    <!-- Button to open Modal -->
-                                    <a href="#" data-toggle="modal" data-target="#editAccessModal{{ $data['role']->id }}">
-                                        Edit Hak Akses
-                                    </a>
-                                </div>
-                            </div>
-
-                            <!-- Modal -->
-                            <div class="modal fade" id="editAccessModal{{ $data['role']->id }}" tabindex="-1" role="dialog" aria-labelledby="editAccessModalLabel{{ $data['role']->id }}" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="editAccessModalLabel{{ $data['role']->id }}">Edit Hak Akses untuk {{ $data['role']->role }}</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <form action="{{ route('update.access', ['role_id' => $data['role']->id]) }}" method="POST">
-                                                @csrf
-                                                @method('PUT')
-
-                                                @foreach ($allMenus as $menu)
-                                                    <div class="form-check">
-                                                        <input type="checkbox" class="form-check-input" name="menus[]" value="{{ $menu->id }}"
-                                                            {{ $data['editable_menus']->contains('menu_id', $menu->id) ? 'checked' : '' }}>
-                                                        <label class="form-check-label" for="menu{{ $menu->id }}">{{ $menu->name }}</label>
-                                                    </div>
-                                                @endforeach
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                            <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
-                                        </div>
-                                            </form>
+                    <!-- SWIPER CONTAINER -->
+                    <div class="swiper-container">
+                        <div class="swiper-wrapper">
+                            @foreach ($roleData as $data)
+                                <div class="swiper-slide">
+                                    <div class="custom-card">
+                                        <div class="total">Total {{ $data['role']->role }}: {{ $data['total_users'] }}</div>
+                                        <a href="#" data-toggle="modal" data-target="#editAccessModal{{ $data['role']->id }}">
+                                            Edit Hak Akses
+                                        </a>
                                     </div>
                                 </div>
-                            </div>
-                        @endforeach
+                            @endforeach
+                        </div>
+                        <!-- Tombol Navigasi -->
+                        <div class="swiper-button-next"></div>
+                        <div class="swiper-button-prev"></div>
                     </div>
 
+                    <!-- Modal -->
+                    @foreach ($roleData as $data)
+                    <div class="modal fade" id="editAccessModal{{ $data['role']->id }}" tabindex="-1" role="dialog" aria-labelledby="editAccessModalLabel{{ $data['role']->id }}" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="editAccessModalLabel{{ $data['role']->id }}">Edit Hak Akses untuk {{ $data['role']->role }}</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="{{ route('update.access', ['role_id' => $data['role']->id]) }}" method="POST">
+                                        @csrf
+                                        @method('PUT')
+
+                                        @foreach ($allMenus as $menu)
+                                            <div class="form-check">
+                                                <input type="checkbox" class="form-check-input" name="menus[]" value="{{ $menu->id }}"
+                                                    {{ $data['editable_menus']->contains('menu_id', $menu->id) ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="menu{{ $menu->id }}">{{ $menu->name }}</label>
+                                            </div>
+                                        @endforeach
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                                </div>
+                                    </form>
+                            </div>
+                        </div>
+                    </div>
+                    @endforeach
 
                     <div class="card-header">
                         <div class="row align-items-center">
@@ -99,8 +101,30 @@
                             </tbody>
                         </table>
                     </div>
+
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Tambahkan Swiper.js -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+
+    <script>
+            var swiper = new Swiper('.swiper-container', {
+            slidesPerView: 3, // Tampilkan 2 kartu agar tidak terlalu besar
+            spaceBetween: 10, // Kurangi jarak antar kartu
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+            breakpoints: {
+                1024: { slidesPerView: 3 }, // Laptop/Desktop
+                768: { slidesPerView: 1 }, // Tablet
+                480: { slidesPerView: 1 }  // Mobile
+            }
+        });
+
+    </script>
 @endsection

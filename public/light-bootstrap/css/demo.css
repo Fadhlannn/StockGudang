@@ -837,18 +837,26 @@
     color:#fff;
 }
 .custom-card {
-    border-radius: 20px;
+    border-radius: 15px;
     background-color: #f0f8ff;
-    padding: 20px;
+    padding: 15px;
     color: #333;
-    text-align: left;
+    text-align: center;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: flex-start;
-    height: 200px;
+    align-items: center;
+    height: 180px; /* Tinggi card lebih proporsional */
+    width: 100%; /* Pastikan card menyesuaikan swiper */
+    max-width: 280px; /* Batas maksimum ukuran card */
+    margin: auto; /* Agar card tetap rata di tengah */
+    font-size: 14px;
+    transition: transform 0.3s ease-in-out;
 }
+
+
+
 
 .total  {
     font-size: 2rem;
@@ -959,3 +967,21 @@ label{
 #check:checked ~ label{
     color: #b30606;
 }
+.swiper-container {
+    padding: 20px 10px; /* Tambahkan padding agar tidak terlalu rapat */
+    width: 100%; /* Pastikan swiper tidak melebihi container */
+    overflow: hidden; /* Hindari elemen tertimpa */
+}
+
+.swiper-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.swiper-slide {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
