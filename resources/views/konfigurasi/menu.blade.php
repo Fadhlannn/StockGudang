@@ -13,9 +13,18 @@
                                 <p class="text-sm mb-0">
                                 </p>
                             </div>
-                            <div class="col-4 text-right">
-                                <a href="#" class="btn btn-sm btn-default" data-toggle="modal" data-target="#createrolemodal">Tambah Menu</a>
-                            </div>
+                            @php
+                                use App\Models\RolePermission;
+                            @endphp
+                            @if (RolePermission::where('role_id', Auth::user()->role_id)
+                                ->whereHas('permission', fn($q) => $q->where('name', 'create_menu'))
+                                ->where('can_access', true)
+                                ->exists())
+                                <div class="col-4 text-right">
+                                    <a href="#" class="btn btn-sm btn-default" data-toggle="modal" data-target="#createrolemodal">Tambah Menu</a>
+                                </div>
+                            @endif
+
                         </div>
                     </div>
 
@@ -36,6 +45,7 @@
                             </tr>
                         </thead>
                         <tbody>
+
                             @foreach ($menus as $menu)
                                 <tr>
                                     <td>{{ $menu->name }}</td>
@@ -43,16 +53,26 @@
                                     <td>{{ $menu->url }}</td>
                                     <td>{{ $menu->category }}</td>
                                     <td>
-                                        <form action="{{ route('menu.destroy', $menu->id) }}" method="POST" style="display:inline;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus Menu ini?')">Delete</button>
-                                        </form>
-                                        <form action="{{ route('update.menu', $menu->id) }}" method="GET" style="display:inline;">
-                                            <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#editMenuModal{{ $menu->id }}">
-                                                Edit
-                                            </button>
-                                        </form>
+                                        @if (RolePermission::where('role_id', Auth::user()->role_id)
+                                            ->whereHas('permission', fn($q) => $q->where('name', 'delete_menu'))
+                                            ->where('can_access', true)
+                                            ->exists())
+                                            <form action="{{ route('menu.destroy', $menu->id) }}" method="POST" style="display:inline;">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus Menu ini?')">Delete</button>
+                                            </form>
+                                        @endif
+                                        @if (RolePermission::where('role_id', Auth::user()->role_id)
+                                            ->whereHas('permission', fn($q) => $q->where('name', 'edit_menu'))
+                                            ->where('can_access', true)
+                                            ->exists())
+                                            <form action="{{ route('update.menu', $menu->id) }}" method="GET" style="display:inline;">
+                                                <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#editMenuModal{{ $menu->id }}">
+                                                    Edit
+                                                </button>
+                                            </form>
+                                        @endif
                                     </td>
                                 </tr>
                                 <div class="modal fade" id="editMenuModal{{ $menu->id }}" tabindex="-1" aria-hidden="true">

@@ -6,6 +6,7 @@ use App\Http\Controllers\HakAksesController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\RoleController;
 use App\Http\Middleware\role_menu;
+use App\Http\Controllers\PermissionController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [AuthController::class, 'pagelogin'])->name('login');
@@ -32,7 +33,8 @@ Route::middleware(['auth', role_menu::class . ':Menu'])->group(function () {
 });
 
 Route::middleware(['auth', role_menu::class . ':Permission'])->group(function () {
-    Route::get('/Permission', action: [AdminController::class,'permission'])->name('permission');
+    Route::get('/permission', [PermissionController::class, 'permission'])->name('permission');
+    Route::put('/permissions/{role_id}', [PermissionController::class, 'update'])->name('permissions.update');
 });
 
 Route::middleware(['auth', role_menu::class . ':Hak-Akses'])->group(function () {
