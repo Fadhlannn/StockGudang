@@ -46,6 +46,6 @@ class MenuController extends Controller
     public function destroy($id){
         $menu = Menu::findOrFail($id);
         $menu->delete();
-        return redirect()->back()->with('success','Role Berhasil dihapus.');
+        return redirect()->back()->with('success','Menu Berhasil dihapus.');
     }
 }

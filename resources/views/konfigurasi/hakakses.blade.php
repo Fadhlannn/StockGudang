@@ -93,10 +93,42 @@
                                     <td>{{ $user->name }}</td>
                                     <td>{{ $user->email }}</td>
                                     <td>{{ $user->role->role ?? 'Tidak Ada Role' }}</td>
-                                    <td class="d-flex justify-content-end">
-                                        <a href="#"><i class="fa fa-edit"></i></a>
+                                    <td>
+                                        <form action="{{ route('hakakses.destroy', $user->id) }}" method="POST" style="display:inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus role ini?')">Delete</button>
+                                        </form>
+                                        <form action="{{ route('update.user', $user->id) }}" method="GET" style="display:inline;">
+                                            <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#edituserModal{{ $user->id }}">
+                                                Edit
+                                            </button>
+                                        </form>
                                     </td>
                                 </tr>
+                                <div class="modal fade" id="edituserModal{{ $user->id }}" tabindex="-1" aria-hidden="true">
+                                    <div class="modal-dialog modal-xl">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Edit user</h5>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form method="POST" action="{{ route('update.user', $user->id) }}" enctype="multipart/form-data">
+                                                    @csrf
+                                                    @method('PUT')
+
+                                                    <div class="form-group">
+                                                        <label for="name">Name</label>
+                                                        <input type="text" class="form-control" id="name" name="name" value="{{ $user->name }}" placeholder="Masukkan Name">
+                                                    </div>
+
+                                                    <button type="submit" class="btn btn-primary">Update</button>
+                                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Batal</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 @endforeach
                             </tbody>
                         </table>

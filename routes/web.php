@@ -22,7 +22,6 @@ Route::middleware(['auth', role_menu::class . ':Role'])->group(function () {
     Route::get('/role', [RoleController::class,'index'])->name('index.role');
     Route::delete('/role/{id}', [RoleController::class,'destroy'])->name('role.destroy');
     Route::put('/role/{id}', [RoleController::class, 'update'])->name('update.role');
-    Route::get('/role/{id}/edit', [RoleController::class, 'edit'])->name('edit.role');
 });
 
 Route::middleware(['auth', role_menu::class . ':Menu'])->group(function () {
@@ -41,4 +40,6 @@ Route::middleware(['auth', role_menu::class . ':Hak-Akses'])->group(function () 
     Route::get('/hakakses', [HakAksesController::class, 'hakakses'])->name('hakakses');
     Route::get('/hakaksesrole', [HakAksesController::class, 'hakaksesrole'])->name('hakaksesrole');
     Route::put('/update-access/{role_id}', [HakAksesController::class, 'updaterole'])->name('update.access');
+    Route::delete('/hak-akses/{id}', [HakAksesController::class,'destroy'])->name('hakakses.destroy');
+    Route::get('/hak-akses/{id}', [HakAksesController::class, 'update'])->name('update.user');
 });

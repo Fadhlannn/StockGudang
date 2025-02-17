@@ -111,6 +111,22 @@ class HakAksesController extends Controller
         // Redirect ke halaman sebelumnya dengan pesan sukses
         return redirect()->route('hakaksesrole')->with('success', 'Hak akses berhasil diperbarui');
     }
+    public function destroy($id){
+        $user = User::findOrFail($id);
+        $user->delete();
+        return redirect()->back()->with('success','User Berhasil dihapus.');
+    }
+    public function update(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'name' => 'required',
+        ]);
 
+        $user = User::findOrFail($id);
+        $user->update([
+            'name' => $validated['name'],
+        ]);
 
+        return redirect()->route('hakakses')->with('success', 'Name berhasil diperbarui.');
+    }
 }
