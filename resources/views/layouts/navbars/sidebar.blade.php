@@ -53,7 +53,7 @@ Tip 2: you can also add an image using data-image tag
                             @endif
                             @if(auth()->user()->hasAccessTo('Permission'))
                                 <li class="nav-item @if($activePage == 'Permission') active @endif">
-                                    <a class="nav-link" href="{{ route('permission') }}">
+                                    <a class="nav-link" href="{{ route('konfigurasi.permission') }}">
                                         <i class="nc-icon nc-single-02"></i>
                                         <p>{{ __("Permission") }}</p>
                                     </a>

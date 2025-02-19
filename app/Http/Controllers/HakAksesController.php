@@ -7,6 +7,9 @@ use App\Models\User;
 use App\Models\Role;
 use App\Models\Menu;
 use App\Models\RoleMenu;
+use App\Models\Permission;
+use App\Models\RolePermission;
+use Illuminate\Support\Facades\Hash;
 
 class HakAksesController extends Controller
 {
@@ -18,10 +21,11 @@ class HakAksesController extends Controller
         // Ambil semua role
         $roles = Role::all();
 
-        // Ambil semua menu
+        // Ambil semua menu & permission
         $allMenus = Menu::all();
+        $allPermissions = Permission::all(); // 🔥 Tambahkan ini
 
-        // Inisialisasi array untuk menyimpan data role, total user dan menu yang bisa diedit
+        // Inisialisasi array untuk menyimpan data role, total user, menu & permissions yang bisa diedit
         $roleData = [];
 
         foreach ($roles as $role) {
@@ -33,17 +37,25 @@ class HakAksesController extends Controller
                 ->where('can_access', true)
                 ->get();
 
+            // Ambil permission yang bisa diakses berdasarkan role
+            $editablePermissions = RolePermission::where('role_id', $role->id)
+                ->where('can_access', true)
+                ->get(); // 🔥 Tambahkan ini
+
             // Simpan data ke dalam array
             $roleData[] = [
                 'role' => $role,
                 'total_users' => $totalUsers,
-                'editable_menus' => $editableMenus
+                'editable_menus' => $editableMenus,
+                'editable_permissions' => $editablePermissions, // 🔥 Tambahkan ini
             ];
         }
 
-        // Kirim data roleData, allMenus, dan users ke view
-        return view('konfigurasi.hakakses', compact('users', 'roleData', 'allMenus'));
+        // Kirim data ke view
+        return view('konfigurasi.hakakses', compact('users', 'roleData', 'allMenus', 'allPermissions','roles'));
+
     }
+
 
     public function hakaksesrole()
     {
@@ -55,6 +67,7 @@ class HakAksesController extends Controller
 
         // Ambil semua menu
         $allMenus = Menu::all();
+        $allPermissions = Permission::all();
 
         // Inisialisasi array untuk menyimpan data role, total user dan menu yang bisa diedit
         $roleData = [];
@@ -68,48 +81,53 @@ class HakAksesController extends Controller
                 ->where('can_access', true)
                 ->get();
 
+            $editablePermissions = RolePermission::where('role_id', $role->id)
+                ->where('can_access', true)
+                ->get();
             // Simpan data ke dalam array
             $roleData[] = [
                 'role' => $role,
                 'total_users' => $totalUsers,
-                'editable_menus' => $editableMenus
+                'editable_menus' => $editableMenus,
+                'editable_permissions' => $editablePermissions,
             ];
         }
         // Kirim data roleData dan allMenus ke view
-        return view('konfigurasi.hakakses', compact('users', 'roleData', 'allMenus'));
+        return view('konfigurasi.hakakses', compact('users', 'roleData', 'allMenus', 'allPermissions', 'editablePermissions','roles'));
 
     }
 
-    public function editrole($role_id)
-    {
-        // Ambil role dan menu terkait untuk editing
-        $role = Role::findOrFail($role_id);
-        $menus = Menu::all();
-        return view('edit-access', compact('role', 'menus'));
-    }
 
     public function updaterole(Request $request, $role_id)
     {
-        // Ambil semua menu ID yang dikirim dari form
+        // Ambil semua permission ID dan menu ID yang dikirim dari form
+        $permissions = $request->input('permissions', []);
         $menus = $request->input('menus', []);
 
         // Temukan role berdasarkan role_id
         $role = Role::findOrFail($role_id);
 
-        // Ambil semua menu yang ada
-        $allMenus = Menu::pluck('id')->toArray();
+        // *Update Permission*
+        $allPermissions = Permission::pluck('id')->toArray();
+        foreach ($allPermissions as $permission_id) {
+            $can_access = in_array($permission_id, $permissions);
+            RolePermission::updateOrCreate(
+                ['role_id' => $role->id, 'permission_id' => $permission_id],
+                ['can_access' => $can_access]
+            );
+        }
 
-        // Loop melalui semua menu dan update can_accsess berdasarkan input user
+        // *Update Menu*
+        $allMenus = Menu::pluck('id')->toArray();
         foreach ($allMenus as $menu_id) {
-            $can_access = in_array($menu_id, $menus); // Jika menu_id ada di array $menus, berarti true
+            $can_access = in_array($menu_id, $menus);
             RoleMenu::updateOrCreate(
                 ['role_id' => $role->id, 'menu_id' => $menu_id],
                 ['can_access' => $can_access]
             );
         }
 
-        // Redirect ke halaman sebelumnya dengan pesan sukses
-        return redirect()->route('hakaksesrole')->with('success', 'Hak akses berhasil diperbarui');
+        return redirect()->route('hakaksesrole')->with('success', 'Hak akses dan izin berhasil diperbarui');
     }
     public function destroy($id){
         $user = User::findOrFail($id);
@@ -129,4 +147,23 @@ class HakAksesController extends Controller
 
         return redirect()->route('hakakses')->with('success', 'Name berhasil diperbarui.');
     }
+
+    public function store(Request $request){
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|min:8',
+            'role_id' => 'required|exists:role,id',
+        ]);
+
+        User::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
+            'role_id' => $validated['role_id'],
+        ]);
+
+        return redirect()->route('hakakses')->with('success', 'User Berhasil Ditambahkan');
+    }
+
 }

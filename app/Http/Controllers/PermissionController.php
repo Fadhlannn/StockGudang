@@ -3,44 +3,39 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Role;
 use App\Models\Permission;
-use App\Models\RolePermission;
 
 class PermissionController extends Controller
 {
-    public function permission()
-    {
-        // Ambil semua role
-        $roles = Role::all();
-
-        // Ambil semua permission
+    public function index(){
         $permissions = Permission::all();
-
-        // Ambil semua data role-permission
-        $rolePermissions = RolePermission::all();
-
-        return view('konfigurasi.permission', compact('roles', 'permissions', 'rolePermissions'));
+        return view('konfigurasi.permission',compact('permissions'));
     }
-
-    public function update(Request $request, $role_id)
+    public function destroy($id){
+        $permission = Permission::findOrFail($id);
+        $permission->delete();
+        return redirect()->back()->with('success','Permission Berhasil dihapus.');
+    }
+    public function update(Request $request, $id)
     {
-        // Ambil semua permission ID yang dikirim dari form
-        $permissions = $request->input('permissions', []);
+        $validated = $request->validate([
+            'name' => 'required',
+        ]);
 
-        // Ambil semua permission yang ada
-        $allPermissions = Permission::pluck('id')->toArray();
+        $permission = Permission::findOrFail($id);
+        $permission->update([
+            'name' => $validated['name'],
+        ]);
 
-        // Loop melalui semua permission untuk update can_access
-        foreach ($allPermissions as $permission_id) {
-            $can_access = in_array($permission_id, $permissions); // True jika checkbox dicentang
-
-            RolePermission::updateOrCreate(
-                ['role_id' => $role_id, 'permission_id' => $permission_id],
-                ['can_access' => $can_access]
-            );
-        }
-
-        return redirect()->route('permission')->with('success', 'Izin berhasil diperbarui');
+        return redirect()->route('konfigurasi.permission')->with('success', 'Permission berhasil diperbarui.');
+    }
+    public function store(Request $request){
+        $validated = $request->validate([
+            'name'=>'required',
+        ]);
+        Permission::create([
+            'name' => $validated['name'],
+        ]);
+        return redirect()->route('konfigurasi.permission')->with('success','Data Berhasil ditambahkan');
     }
 }

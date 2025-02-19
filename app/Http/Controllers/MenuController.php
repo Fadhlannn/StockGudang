@@ -40,7 +40,7 @@ class MenuController extends Controller
             'category' => $validated['category'],
         ]);
 
-        return redirect()->route('index.menu')->with('success', 'Role berhasil diperbarui.');
+        return redirect()->route('index.menu')->with('success', 'Menu berhasil diperbarui.');
     }
 
     public function destroy($id){

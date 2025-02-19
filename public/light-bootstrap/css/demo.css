@@ -971,6 +971,7 @@ label{
     padding: 20px 10px; /* Tambahkan padding agar tidak terlalu rapat */
     width: 100%; /* Pastikan swiper tidak melebihi container */
     overflow: hidden; /* Hindari elemen tertimpa */
+    position: relative; /* Agar tombol navigasi bisa diposisikan secara absolut */
 }
 
 .swiper-wrapper {
@@ -983,5 +984,48 @@ label{
     justify-content: center;
     align-items: center;
 }
+
+/* Tombol navigasi */
+.swiper-button-next,
+.swiper-button-prev {
+    position: absolute; /* Posisi tombol menjadi absolut */
+    top: 50%; /* Menempatkan tombol di tengah vertikal */
+    transform: translateY(-50%); /* Agar tombol benar-benar tengah secara vertikal */
+    color: white; /* Warna teks tombol */
+    border-radius: 50%; /* Membuat tombol bulat */
+    padding: 10px; /* Ukuran tombol */
+    z-index: 10; /* Pastikan tombol berada di atas konten lainnya */
+}
+
+.swiper-button-next {
+    right: 10px; /* Jarak dari sisi kanan */
+}
+
+.swiper-button-prev {
+    left: 10px; /* Jarak dari sisi kiri */
+}
+
+
+/* Pastikan dropdown terlihat dengan warna yang sesuai */
+select.form-control {
+    background-color: #ffffff; /* Warna latar belakang putih */
+    color: #000000; /* Warna teks hitam */
+    border: 1px solid #ced4da; /* Garis batas */
+}
+
+select.form-control option {
+    background-color: #ffffff; /* Latar belakang putih untuk pilihan */
+    color: #000000; /* Warna teks hitam untuk pilihan */
+}
+
+/* Menambahkan padding dan margin untuk elemen form */
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    font-weight: bold;
+}
+
 
 

@@ -32,8 +32,10 @@ Route::middleware(['auth', role_menu::class . ':Menu'])->group(function () {
 });
 
 Route::middleware(['auth', role_menu::class . ':Permission'])->group(function () {
-    Route::get('/permission', [PermissionController::class, 'permission'])->name('permission');
-    Route::put('/permissions/{role_id}', [PermissionController::class, 'update'])->name('permissions.update');
+    Route::get('/permission', [PermissionController::class, 'index'])->name('konfigurasi.permission');
+    Route::delete('/permission/{id}', [PermissionController::class,'destroy'])->name('permission.destroy');
+    Route::put('/permission/{id}', [PermissionController::class, 'update'])->name('update.permission');
+    Route::post('/permission', [PermissionController::class,'store'])->name('store.permission');
 });
 
 Route::middleware(['auth', role_menu::class . ':Hak-Akses'])->group(function () {
@@ -41,5 +43,6 @@ Route::middleware(['auth', role_menu::class . ':Hak-Akses'])->group(function () 
     Route::get('/hakaksesrole', [HakAksesController::class, 'hakaksesrole'])->name('hakaksesrole');
     Route::put('/update-access/{role_id}', [HakAksesController::class, 'updaterole'])->name('update.access');
     Route::delete('/hak-akses/{id}', [HakAksesController::class,'destroy'])->name('hakakses.destroy');
-    Route::get('/hak-akses/{id}', [HakAksesController::class, 'update'])->name('update.user');
+    Route::put('/hak-akses/{id}', [HakAksesController::class, 'update'])->name('update.user');
+    Route::post('/hak-akses', [HakAksesController::class,'store'])->name('store.user');
 });
