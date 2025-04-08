@@ -7,8 +7,16 @@ use App\Models\Permission;
 
 class PermissionController extends Controller
 {
-    public function index(){
-        $permissions = Permission::all();
+    public function index(Request $request){
+        $search = $request -> input("search");
+
+        $queryBuilder = Permission::orderBy('created_at', 'asc'); // Query dasar untuk mengambil data
+
+        // Tambahkan pencarian jika ada query
+        if ($search) {
+            $queryBuilder->where('name', 'like', "%{$search}%");
+        }
+        $permissions = $queryBuilder->paginate(5);
         return view('konfigurasi.permission',compact('permissions'));
     }
     public function destroy($id){

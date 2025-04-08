@@ -38,7 +38,7 @@
                     <!-- Modal -->
                     @foreach ($roleData as $data)
                     <div class="modal fade" id="editAccessModal{{ $data['role']->id }}" tabindex="-1" role="dialog" aria-labelledby="editAccessModalLabel{{ $data['role']->id }}" aria-hidden="true">
-                        <div class="modal-dialog" style="top: -20%;" role="document">
+                        <div class="modal-dialog" style="top: -30%;" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="editAccessModalLabel{{ $data['role']->id }}">Edit Hak Akses untuk {{ $data['role']->role }}</h5>
@@ -52,25 +52,32 @@
                                         <!-- Bagian Menu -->
                                         <div class="mb-3">
                                             <label class="form-label fw-bold">Pilih Menu:</label>
-                                            @foreach ($allMenus as $menu)
-                                                <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input custom-checkbox" id="menu{{ $menu->id }}" name="menus[]" value="{{ $menu->id }}"
-                                                        {{ $data['editable_menus']->contains('menu_id', $menu->id) ? 'checked' : '' }}>
-                                                    <label class="form-check-label" for="menu{{ $menu->id }}">{{ $menu->name }}</label>
-                                                </div>
-                                            @endforeach
+                                            <div class="row">
+                                                @foreach ($allMenus as $menu)
+                                                    <div class="col-md-3 d-flex align-items-center mb-2 px-2">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" class="form-check-input custom-checkbox" id="menu{{ $menu->id }}" name="menus[]" value="{{ $menu->id }}"
+                                                                {{ $data['editable_menus']->contains('menu_id', $menu->id) ? 'checked' : '' }}>
+                                                            <label class="form-check-label" for="menu{{ $menu->id }}">{{ $menu->name }}</label>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            </div>
                                         </div>
-
                                         <!-- Bagian Permissions -->
                                         <div class="mb-3">
                                             <label class="form-label fw-bold">Pilih Permissions:</label>
-                                            @foreach ($allPermissions as $permission)
-                                                <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input custom-checkbox" id="permission{{ $permission->id }}" name="permissions[]" value="{{ $permission->id }}"
-                                                        {{ in_array($permission->id, $data['editable_permissions']->pluck('permission_id')->toArray()) ? 'checked' : '' }}>
-                                                    <label class="form-check-label" for="permission{{ $permission->id }}">{{ $permission->name }}</label>
-                                                </div>
-                                            @endforeach
+                                            <div class="row">
+                                                @foreach ($allPermissions as $permission)
+                                                    <div class="col-md-3 d-flex align-items-center mb-2 px-2">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" class="form-check-input custom-checkbox" id="permission{{ $permission->id }}" name="permissions[]" value="{{ $permission->id }}"
+                                                                {{ in_array($permission->id, $data['editable_permissions']->pluck('permission_id')->toArray()) ? 'checked' : '' }}>
+                                                            <label class="form-check-label ms-2" for="permission{{ $permission->id }}">{{ $permission->name }}</label>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            </div>
                                         </div>
 
                                         <div class="modal-footer">
@@ -90,10 +97,19 @@
                             <div class="col-8">
                                 <h3 class="mb-0">Users</h3>
                             </div>
+                            @if (RolePermission::where('role_id', Auth::user()->role_id)
+                                        ->whereHas('permission', fn($q) => $q->where('name', 'create_user'))
+                                        ->where('can_access', true)
+                                        ->exists())
                             <div class="col-4 text-right">
                                 <a href="#" class="btn btn-sm btn-default" data-toggle="modal" data-target="#createusermodal">Add user</a>
                             </div>
+                            @endif
                         </div>
+                        <form class="d-flex" role="search" method="GET" action="{{ route('hakakses') }}">
+                            <input class="form-control me-2" type="search" name="search" placeholder="Cari User" aria-label="Search" value="{{ request('search') }}">
+                            <button class="btn btn-primary" type="submit">Cari</button>
+                        </form>
                     </div>
 
                     <div class="card-body table-full-width table-responsive">
@@ -108,26 +124,31 @@
                             <tbody>
                                 @foreach ($users as $user)
                                 <tr>
-                                    <td>{{$loop->iteration}}</td>
+                                    <td>{{ ($users->currentPage() - 1) * $users->perPage() + $loop->iteration }}</td>
                                     <td>{{ $user->name }}</td>
                                     <td>{{ $user->email }}</td>
                                     <td>{{ $user->role->role ?? 'Tidak Ada Role' }}</td>
                                     <td>
                                         @if (RolePermission::where('role_id', Auth::user()->role_id)
-                                        ->whereHas('permission', fn($q) => $q->where('name', 'delete_menu'))
+                                        ->whereHas('permission', fn($q) => $q->where('name', 'delete_user'))
                                         ->where('can_access', true)
                                         ->exists())
                                         <form action="{{ route('hakakses.destroy', $user->id) }}" method="POST" style="display:inline;">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus role ini?')">Delete</button>
+                                            <button type="submit" class="btn btn-sm btn-danger" style="margin-right: 8px;" onclick="return confirm('Apakah Anda yakin ingin menghapus role ini?')">Delete</button>
                                         </form>
                                         @endif
+                                        @if (RolePermission::where('role_id', Auth::user()->role_id)
+                                        ->whereHas('permission', fn($q) => $q->where('name', 'edit_user'))
+                                        ->where('can_access', true)
+                                        ->exists())
                                         <form action="{{ route('update.user', $user->id) }}" method="PUT" style="display:inline;">
                                             <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#edituserModal{{ $user->id }}">
                                                 Edit
                                             </button>
                                         </form>
+                                        @endif
                                     </td>
                                 </tr>
                                 <div class="modal fade" id="edituserModal{{ $user->id }}" tabindex="-1" aria-hidden="true">
@@ -146,6 +167,18 @@
                                                         <input type="text" class="form-control" id="name" name="name" value="{{ $user->name }}" placeholder="Masukkan Name">
                                                     </div>
 
+                                                    <div class="form-group">
+                                                        <label for="role_id">Role</label>
+                                                        <select class="form-control" id="role_id" name="role_id">
+                                                            <option value="">Pilih Role</option>
+                                                            @foreach($roles as $role)
+                                                                <option value="{{ $role->id }}">{{ $role->role }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                        @error('role_id')
+                                                        <div class="alert alert-danger mt-2">{{ $message }}</div>
+                                                        @enderror
+                                                    </div>
                                                     <button type="submit" class="btn btn-primary">Update</button>
                                                     <button type="button" class="btn btn-danger" data-dismiss="modal">Batal</button>
                                                 </form>
@@ -157,6 +190,9 @@
                                 @endforeach
                             </tbody>
                         </table>
+                        <div class="d-flex justify-content-end mt-4">
+                            {{ $users->appends(request()->query())->links('pagination::bootstrap-5') }}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -187,7 +223,7 @@
 
 
 <div class="modal fade" id="createusermodal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
+    <div class="modal-dialog modal-xl" style="top:-15%">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="createUserModalLabel">Tambah User</h5>

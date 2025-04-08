@@ -819,6 +819,15 @@ body>.navbar-collapse[data-color="blue"]:after {
     margin: 0 auto;
 }
 
+.modal{
+    position: center;
+}
+
+.modal .modal-content {
+    margin: 1%;
+}
+
+
 .modal .modal-content .modal-header {
     border-bottom: none;
     padding-top: 24px;
@@ -983,8 +992,8 @@ fieldset[disabled] .btn.active {
 }
 
 .btn-primary {
-    border-color: #3472F7;
-    color: #3472F7;
+    border-color: #8e1313;
+    color: #8e1313;
 }
 
 .btn-primary:hover,
@@ -992,9 +1001,9 @@ fieldset[disabled] .btn.active {
 .btn-primary:active,
 .btn-primary.active,
 .open>.btn-primary.dropdown-toggle {
-    background-color: transparent;
-    color: #1D62F0;
-    border-color: #1D62F0;
+    background-color: #8e1313;
+    color: white;
+    border-color: #8e1313;
 }
 
 .btn-primary.disabled,
@@ -1253,8 +1262,9 @@ fieldset[disabled] .btn-warning.active {
 }
 
 .btn-danger {
-    border-color: #FF4A55;
-    color: #FF4A55;
+    border-color: #8e1313;
+    background-color: #8e1313;
+    color: white;
 }
 
 .btn-danger:hover,
@@ -1263,8 +1273,8 @@ fieldset[disabled] .btn-warning.active {
 .btn-danger.active,
 .open>.btn-danger.dropdown-toggle {
     background-color: transparent;
-    color: #EE2D20;
-    border-color: #EE2D20;
+    color: #8e1313;;
+    border-color: #8e1313;;
 }
 
 .btn-danger.disabled,
@@ -1856,15 +1866,34 @@ fieldset[disabled] .form-control {
     position: relative;
 }
 
+.form-check {
+    display: flex;
+    align-items: center; /* Membuat checkbox dan label sejajar secara vertikal */
+    gap: 1px; /* Menyesuaikan jarak antara checkbox dan teks */
+}
+
 .form-check .form-check-label {
+    cursor: pointer;
+    text-transform: capitalize;
+    font-size: 11px; /* Atur ukuran teks */
+    color: #333; /* Warna teks lebih gelap */
+    line-height: normal; /* Pastikan tinggi baris tidak berlebihan */
+    margin-bottom: 0;
+    padding-left: 0px;
+    padding-right: 10px;
+    line-height: 26px;
+}
+
+
+/* .form-check .form-check-label {
     display: inline-block;
     position: relative;
     cursor: pointer;
-    padding-left: 35px;
+    padding-left: 10px;
     line-height: 26px;
     margin-bottom: 0;
     text-transform: capitalize;
-}
+} */
 
 .form-check .form-check-sign::before,
 .form-check .form-check-sign::after {
@@ -2873,8 +2902,8 @@ Copyright (c) 2015 Daniel Eden
 .card label {
     font-size: 0.875rem;
     font-weight: 400;
-    color: #9A9A9A;
-    margin-bottom: 0px;
+    color: #817a7a;
+    margin-bottom: 0;
 }
 .card.card-login .form-check {
     margin-left: -12px;

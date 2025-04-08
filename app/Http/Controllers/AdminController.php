@@ -21,4 +21,11 @@ class AdminController extends Controller
     function Welcome(){
         return view('Welcome');
     }
+
+    // function DataMasuk(){
+    //     return view('DataBarang.DataMasuk');
+    // }
+    function DataKeluar(){
+        return view('DataBarang.DataKeluar');
+    }
 }

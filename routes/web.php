@@ -7,15 +7,34 @@ use App\Http\Controllers\MenuController;
 use App\Http\Controllers\RoleController;
 use App\Http\Middleware\role_menu;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\MasterDataContolller;
+use App\Http\Controllers\RiwayatController;
+use App\Http\Controllers\StockController;
+use App\Http\Controllers\TransaksiController;
+use App\Http\Controllers\DashboardController;
 
 Route::get('/', [AuthController::class, 'pagelogin'])->name('login');
 Route::post('/', [AuthController::class, 'login']);
 Route::post('/logout',  [ AuthController::class,'logout'])->name('logout');
+Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
+Route::post('/register', [RegisterController::class,'register']);
 
-Route::get('/Welcome', [AdminController::class, 'Welcome'])->name('Welcome');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/Welcome', [AdminController::class, 'Welcome'])->name('Welcome');
+});
 
-Route::get('/Dashboard', [AdminController::class, 'Dashboard'])->name('Dashboard');
+Route::middleware(['auth', role_menu::class . ':Dashboard'])->group(function () {
+    // Route::get('/Dashboard', [AdminController::class, 'Dashboard'])->name('Dashboard');
+    Route::get('/Dashboard', [DashboardController::class, 'index'])->name('dashboard');
+});
+
+Route::get('password/reset', [ResetPasswordController::class, 'showResetRequestForm'])->name('password.request');
+Route::post('password/email', [ResetPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+Route::get('password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
 
 Route::middleware(['auth', role_menu::class . ':Role'])->group(function () {
     Route::post('/role', [RoleController::class,'store'])->name('store.role');
@@ -45,4 +64,26 @@ Route::middleware(['auth', role_menu::class . ':Hak-Akses'])->group(function () 
     Route::delete('/hak-akses/{id}', [HakAksesController::class,'destroy'])->name('hakakses.destroy');
     Route::put('/hak-akses/{id}', [HakAksesController::class, 'update'])->name('update.user');
     Route::post('/hak-akses', [HakAksesController::class,'store'])->name('store.user');
+});
+
+Route::middleware(['auth', role_menu::class . ':MasterData'])->group(function () {
+    Route::get('/MasterData', [MasterDataContolller::class, 'index'])->name('MasterData');
+    Route::post('/MasterData', [MasterDataContolller::class, 'store'])->name('store.sparepart');
+    Route::delete('/MasterData/{id}', [MasterDataContolller::class,'destroy'])->name('sparepart.destroy');
+    Route::put('/MasterData/{id}', [MasterDataContolller::class, 'update'])->name('update.sparepart');
+
+});
+
+Route::middleware(['auth', role_menu::class . ':Transaksi'])->group(function () {
+    Route::get('/transaksi', [TransaksiController::class, 'index'])->name('Transaksi');
+    Route::post('/transaksi', [TransaksiController::class, 'store'])->name('Transaksi.store');
+});
+
+Route::middleware(['auth', role_menu::class . ':Riwayat'])->group(function () {
+    Route::get('/Riwayat', [RiwayatController::class, 'index'])->name('Riwayat');
+    Route::get('/riwayat/export-pdf', [RiwayatController::class, 'exportPDF'])->name('riwayat.export-pdf');
+});
+
+Route::middleware(['auth', role_menu::class . ':Stok'])->group(function () {
+    Route::get('/stok', [StockController::class, 'index'])->name('stok.index');
 });

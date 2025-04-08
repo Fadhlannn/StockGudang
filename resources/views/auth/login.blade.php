@@ -54,10 +54,10 @@
                                         <button type="submit" class="btn btn-warning btn-wd">{{ __('Login') }}</button>
                                     </div>
                                     <div class="d-flex justify-content-between">
-                                        <a class="btn btn-link"  style="color:#23CCEF" href="">
+                                        <a class="btn btn-link"  style="color:#23CCEF" href="{{route('password.request')}}">
                                         {{ __('Forgot password?') }}
                                         </a>
-                                        <a class="btn btn-link" style="color:#23CCEF" href="">
+                                        <a class="btn btn-link" style="color:#23CCEF" href="{{route('register')}}">
                                             {{ __('Create account') }}
                                         </a>
                                     </div>

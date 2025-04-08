@@ -21,9 +21,19 @@ class MenuController extends Controller
         ]);
         return redirect()->route('index.menu')->with('success','Data Berhasil ditambahkan');
     }
-    public function index(){
-        $menus = Menu::all();
-        return view('konfigurasi.menu',compact('menus'));
+    public function index(Request $request){
+
+        $search = $request -> input("search");
+
+        $queryBuilder = Menu::orderBy('created_at', 'asc'); // Query dasar untuk mengambil data
+
+        // Tambahkan pencarian jika ada query
+        if ($search) {
+            $queryBuilder->where('name', 'like', "%{$search}%");
+        }
+        $menus = $queryBuilder->paginate(5);
+        return view('konfigurasi.menu',compact('menus','search'));
+
     }
     public function update(Request $request, $id)
     {

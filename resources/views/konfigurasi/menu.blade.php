@@ -5,7 +5,6 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="card data-tables">
-
                     <div class="card-header">
                         <div class="row align-items-center">
                             <div class="col-8">
@@ -24,12 +23,15 @@
                                     <a href="#" class="btn btn-sm btn-default" data-toggle="modal" data-target="#createrolemodal">Tambah Menu</a>
                                 </div>
                             @endif
-
                         </div>
+                        <form class="d-flex" role="search" method="GET" action="{{ route('index.menu') }}">
+                            <input class="form-control me-2" type="search" name="search" placeholder="Cari Menu" aria-label="Search" value="{{ request('search') }}">
+                            <button class="btn btn-primary" type="submit">Cari</button>
+                        </form>
                     </div>
 
                     <div class="col-12 mt-2">
-                                                                            </div>
+                    </div>
 
                     <div class="toolbar">
                         <!--        Here you can write extra buttons/actions for the toolbar              -->
@@ -37,7 +39,8 @@
                     <div class="card-body table-full-width table-responsive">
                         <table class="table table-hover table-striped">
                             <thead>
-                                <tr><th>Name</th>
+                                <th>No</th>
+                                <th>Name</th>
                                 <th>Order</th>
                                 <th>Url</th>
                                 <th>Category</th>
@@ -48,6 +51,7 @@
 
                             @foreach ($menus as $menu)
                                 <tr>
+                                    <td>{{ ($menus->currentPage() - 1) * $menus->perPage() + $loop->iteration }}</td>
                                     <td>{{ $menu->name }}</td>
                                     <td>{{ $menu->order }}</td>
                                     <td>{{ $menu->url }}</td>
@@ -60,9 +64,10 @@
                                             <form action="{{ route('menu.destroy', $menu->id) }}" method="POST" style="display:inline;">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus Menu ini?')">Delete</button>
+                                                <button type="submit" class="btn btn-sm btn-danger" style="margin-right: 8px;" onclick="return confirm('Apakah Anda yakin ingin menghapus Menu ini?')">Delete</button>
                                             </form>
                                         @endif
+
                                         @if (RolePermission::where('role_id', Auth::user()->role_id)
                                             ->whereHas('permission', fn($q) => $q->where('name', 'edit_menu'))
                                             ->where('can_access', true)
@@ -75,6 +80,8 @@
                                         @endif
                                     </td>
                                 </tr>
+
+
                                 <div class="modal fade" id="editMenuModal{{ $menu->id }}" tabindex="-1" aria-hidden="true">
                                     <div class="modal-dialog modal-xl">
                                         <div class="modal-content">
@@ -107,6 +114,9 @@
                             @endforeach
                         </tbody>
                         </table>
+                        <div class="d-flex justify-content-end mt-4">
+                            {{ $menus->appends(request()->query())->links('pagination::bootstrap-5') }}
+                        </div>
                     </div>
                 </div>
             </div>

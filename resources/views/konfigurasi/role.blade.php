@@ -8,8 +8,21 @@
                     <div class="card strpied-tabled-with-hover">
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <h4 class="card-title">Role</h4>
+                            @php
+                                use App\Models\RolePermission;
+                            @endphp
+
+                            @if (RolePermission::where('role_id', Auth::user()->role_id)
+                            ->whereHas('permission', fn($q) => $q->where('name', 'create_role'))
+                            ->where('can_access', true)
+                            ->exists())
                                 <a href="#" class="btn btn-sm btn-default" data-toggle="modal" data-target="#createrolemodal">Tambah Role</a>
+                            @endif
                         </div>
+                        <form class="d-flex" role="search" method="GET" action="{{ route('index.role') }}">
+                            <input class="form-control me-2" type="search" name="search" placeholder="Cari Role" aria-label="Search" value="{{ request('search') }}">
+                            <button class="btn btn-primary" type="submit">Cari</button>
+                        </form>
                         <div class="card-body table-full-width table-responsive">
                             <table class="table table-hover table-striped">
                                 <thead>
@@ -24,7 +37,7 @@
                                     @foreach ( $roles as $role )
                                     <tr>
                                         <td>
-                                            {{$loop->iteration}}
+                                            {{ ($roles->currentPage() - 1) * $roles->perPage() + $loop->iteration }}
                                         </td>
                                         <td>
                                             {{$role->role}}
@@ -33,16 +46,26 @@
                                             {{$role->Guard_Name}}
                                         </td>
                                         <td>
+                                        @if (RolePermission::where('role_id', Auth::user()->role_id)
+                                        ->whereHas('permission', fn($q) => $q->where('name', 'delete_role'))
+                                        ->where('can_access', true)
+                                        ->exists())
                                             <form action="{{ route('role.destroy', $role->id) }}" method="POST" style="display:inline;">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus role ini?')">Delete</button>
+                                                <button type="submit" class="btn btn-sm btn-danger" style="margin-right: 8px;" onclick="return confirm('Apakah Anda yakin ingin menghapus role ini?')">Delete</button>
                                             </form>
+                                        @endif
+                                        @if (RolePermission::where('role_id', Auth::user()->role_id)
+                                        ->whereHas('permission', fn($q) => $q->where('name', 'edit_role'))
+                                        ->where('can_access', true)
+                                        ->exists())
                                             <form action="{{ route('update.role', $role->id) }}" method="GET" style="display:inline;">
                                                 <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#editRoleModal{{ $role->id }}">
                                                     Edit
                                                 </button>
                                             </form>
+                                        @endif
                                         </td>
                                     </tr>
                                     <div class="modal fade" id="editRoleModal{{ $role->id }}" tabindex="-1" aria-hidden="true">
@@ -74,6 +97,9 @@
                                     @endforeach
                                 </tbody>
                             </table>
+                            <div class="d-flex justify-content-end mt-4">
+                                {{ $roles->appends(request()->query())->links('pagination::bootstrap-5') }}
+                            </div>
                         </div>
                     </div>
                 </div>

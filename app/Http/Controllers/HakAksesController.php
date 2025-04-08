@@ -13,10 +13,20 @@ use Illuminate\Support\Facades\Hash;
 
 class HakAksesController extends Controller
 {
-    public function hakakses()
+    public function hakakses(Request $request)
     {
+        $search = $request -> input("search");
+
+        $queryBuilder = User::orderBy('created_at', 'asc'); // Query dasar untuk mengambil data
+
+        // Tambahkan pencarian jika ada query
+        if ($search) {
+            $queryBuilder->where('name', 'like', "%{$search}%");
+        }
+
+        $users = $queryBuilder->paginate(5);
         // Ambil semua user dengan role terkait
-        $users = User::with('role')->get();
+        // $users = User::with('role')->paginate(3);
 
         // Ambil semua role
         $roles = Role::all();
@@ -60,7 +70,7 @@ class HakAksesController extends Controller
     public function hakaksesrole()
     {
         // Ambil semua user dengan role terkait
-        $users = User::with('role')->get();
+        $users = User::with('role')->paginate(3);
 
         // Ambil semua role
         $roles = Role::all();
@@ -138,11 +148,13 @@ class HakAksesController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required',
+            'role_id' => 'required|exists:role,id',
         ]);
 
         $user = User::findOrFail($id);
         $user->update([
             'name' => $validated['name'],
+            'role_id' => $validated['role_id'],
         ]);
 
         return redirect()->route('hakakses')->with('success', 'Name berhasil diperbarui.');

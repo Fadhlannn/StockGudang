@@ -18,8 +18,16 @@ class RoleController extends Controller
         ]);
         return redirect()->route('index.role')->with('success','Data Berhasil ditambahkan');
     }
-    public function index(){
-        $roles = Role::all();
+    public function index(Request $request){
+        $search = $request -> input("search");
+
+        $queryBuilder = Role::orderBy('created_at', 'asc'); // Query dasar untuk mengambil data
+
+        // Tambahkan pencarian jika ada query
+        if ($search) {
+            $queryBuilder->where('role', 'like', "%{$search}%");
+        }
+        $roles = $queryBuilder->paginate(5);
         return view('konfigurasi.role',compact('roles'));
     }
     public function destroy($id){

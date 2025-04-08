@@ -603,6 +603,7 @@
 
 .lightbox .modal-content {
     overflow: hidden;
+
 }
 
 .lightbox .modal-body {
@@ -892,7 +893,7 @@
 .form-check {
     font-size: 1rem;
     padding-left: 15px;
-    padding-right: 15px;
+    padding-right: 10px;
 }
 
 .form-check-input {
@@ -915,8 +916,17 @@
 
 .form-check-label {
     font-size: 1rem;
-    color: #333;
+    color: #cd1818;
     transition: color 0.2s ease;
+}
+
+.col-md-4 {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.mb-2 {
+    margin-bottom: 8px !important;
 }
 
 .form-check-label:hover {
@@ -956,8 +966,9 @@
 
 label{
     font-weight: 500;
-    color: #333;
+    color: #000000;
     cursor: pointer;
+
 }
 
 #check:checked{
@@ -1027,5 +1038,42 @@ select.form-control option {
     font-weight: bold;
 }
 
+.pagination .page-item .page-link {
+    color: #ab1818;
+    border: 1px solid #ab1818;
+    padding: 8px 14px;
+    margin: 0 3px;
+    border-radius: 50px;
+    transition: all 0.3s ease-in-out;
+}
+
+.pagination .page-item.active .page-link {
+    background: linear-gradient(to bottom, #0a0a0a 0%, #ab1818 100%);
+    color: white;
+    border-color: #ab1818;
+    font-weight: bold;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.pagination .page-item .page-link:hover {
+    background-color: #ab1818;
+    color: white;
+    border-color: #ab1818;
+    transform: scale(1.1);
+}
+
+.pagination .page-item.disabled .page-link {
+    color: #ccc;
+    border-color: #ccc;
+    background-color: #f8f9fa;
+    cursor: not-allowed;
+}
+
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 0;
+}
 
 
