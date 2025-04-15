@@ -71,11 +71,11 @@ Tip 2: you can also add an image using data-image tag
                 </li>
             @endif
 
-            @if(auth()->user()->hasAccessTo('MasterData'))
-            <li class="nav-item @if($activePage == 'MasterData') active @endif">
-                <a class="nav-link" href="{{ route('MasterData') }}">
+            @if(auth()->user()->hasAccessTo('Sparepart'))
+            <li class="nav-item @if($activePage == 'Sparepart') active @endif">
+                <a class="nav-link" href="{{ route('Sparepart') }}">
                     <i class="fa-solid fa-screwdriver-wrench"></i>
-                    <p>{{ __("MasterData") }}</p>
+                    <p>{{ __("Sparepart") }}</p>
                 </a>
             </li>
             @endif
@@ -104,6 +104,20 @@ Tip 2: you can also add an image using data-image tag
                 </a>
             </li>
             @endif
+
+            <li class="nav-item @if($activePage == 'DataMasuk') active @endif">
+                <a class="nav-link" href="{{ route('DataMasuk') }}">
+                    <i class="fa-solid fa-house"></i>
+                    <p>{{ __("DataMasuk") }}</p>
+                </a>
+            </li>
+
+            <li class="nav-item @if($activePage == 'Spk') active @endif">
+                <a class="nav-link" href="{{ route('Spk') }}">
+                    <i class="fa-solid fa-house"></i>
+                    <p>{{ __("Spk") }}</p>
+                </a>
+            </li>
 
             <li class="nav-item @if($activePage == 'LogOut') active @endif">
                 <a class="nav-link" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">

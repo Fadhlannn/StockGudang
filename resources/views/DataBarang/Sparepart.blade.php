@@ -1,4 +1,4 @@
-@extends('layouts.app', ['activePage' => 'MasterData', 'title' => 'MasterData'])
+@extends('layouts.app', ['activePage' => 'Sparepart', 'title' => 'Sparepart'])
 
 @section('content')
     <div class="container-fluid">
@@ -25,7 +25,7 @@
                             @endif
 
                         </div>
-                        <form class="d-flex" role="search" method="GET" action="{{ route('MasterData') }}">
+                        <form class="d-flex" role="search" method="GET" action="{{ route('Sparepart') }}">
                             <input class="form-control me-2" type="search" name="search" placeholder="Cari Katalog" aria-label="Search" value="{{ request('search') }}">
                             <button class="btn btn-primary" type="submit">Cari</button>
                         </form>

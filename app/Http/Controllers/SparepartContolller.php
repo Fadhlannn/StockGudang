@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Sparepart;
 
-class MasterDataContolller extends Controller
+class SparepartContolller extends Controller
 {
     public function index(Request $request)
     {
@@ -18,7 +18,7 @@ class MasterDataContolller extends Controller
             $queryBuilder->where('name', 'like', "%{$search}%");
         }
         $spareparts = $queryBuilder->paginate(5);
-        return view('DataBarang.MasterData', compact('spareparts'));
+        return view('DataBarang.Sparepart', compact('spareparts'));
     }
     public function store(Request $request){
         $validated = $request->validate([
@@ -38,7 +38,7 @@ class MasterDataContolller extends Controller
             'satuan' => $validated['satuan'],
             'keterangan_part' => $validated['keterangan_part'],
         ]);
-        return redirect()->route('MasterData')->with('success','Data Berhasil ditambahkan');
+        return redirect()->route('Sparepart')->with('success','Data Berhasil ditambahkan');
     }
     public function destroy($id){
         $spareparts = Sparepart::findOrFail($id);
@@ -67,6 +67,6 @@ class MasterDataContolller extends Controller
             'keterangan_part' => $validated['keterangan_part'],
         ]);
 
-        return redirect()->route('MasterData')->with('success', 'Permission berhasil diperbarui.');
+        return redirect()->route('Sparepart')->with('success', 'Permission berhasil diperbarui.');
     }
 }

@@ -11,12 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('bagian_gudang', function (Blueprint $table) {
+        Schema::create('DataMasuk', function (Blueprint $table) {
             $table->id();
-            $table->string('nama');
-            $table->string('nip')->unique(); // Nomor identitas pengemudi
-            $table->string('no_hp');
+            $table->integer('no_order');
+            $table->date('Tanggal_masuk');
+            $table->foreignId('sparepart_id')->constrained('sparepart')->onDelete('cascade');
+            $table->integer('jumlah');
+            $table->foreignId('supliers_id')->constrained('supliers')->onDelete('cascade');
             $table->foreignId('gudang_id')->constrained('gudang')->onDelete('cascade');
+            $table->foreignId('bagian_gudang_id')->constrained('bagian_gudang')->onDelete('cascade');
+            $table->string('keterangan');
             $table->timestamps();
         });
     }

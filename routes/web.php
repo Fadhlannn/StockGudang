@@ -10,11 +10,12 @@ use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\MasterDataContolller;
+use App\Http\Controllers\SparepartContolller;
 use App\Http\Controllers\RiwayatController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\DashboardController;
+use App\Models\Sparepart;
 
 Route::get('/', [AuthController::class, 'pagelogin'])->name('login');
 Route::post('/', [AuthController::class, 'login']);
@@ -66,11 +67,11 @@ Route::middleware(['auth', role_menu::class . ':Hak-Akses'])->group(function () 
     Route::post('/hak-akses', [HakAksesController::class,'store'])->name('store.user');
 });
 
-Route::middleware(['auth', role_menu::class . ':MasterData'])->group(function () {
-    Route::get('/MasterData', [MasterDataContolller::class, 'index'])->name('MasterData');
-    Route::post('/MasterData', [MasterDataContolller::class, 'store'])->name('store.sparepart');
-    Route::delete('/MasterData/{id}', [MasterDataContolller::class,'destroy'])->name('sparepart.destroy');
-    Route::put('/MasterData/{id}', [MasterDataContolller::class, 'update'])->name('update.sparepart');
+Route::middleware(['auth', role_menu::class . ':Sparepart'])->group(function () {
+    Route::get('/Sparepart', [SparepartContolller::class, 'index'])->name('Sparepart');
+    Route::post('/Sparepart', [SparepartContolller::class, 'store'])->name('store.sparepart');
+    Route::delete('/Sparepart/{id}', [SparepartContolller::class,'destroy'])->name('sparepart.destroy');
+    Route::put('/Sparepart/{id}', [SparepartContolller::class, 'update'])->name('update.sparepart');
 
 });
 
@@ -87,3 +88,7 @@ Route::middleware(['auth', role_menu::class . ':Riwayat'])->group(function () {
 Route::middleware(['auth', role_menu::class . ':Stok'])->group(function () {
     Route::get('/stok', [StockController::class, 'index'])->name('stok.index');
 });
+
+Route::get('/DataMasuk', [AdminController::class, 'DataMasuk'])->name('DataMasuk');
+
+Route::get('/Spk', [AdminController::class, 'Spk'])->name('Spk');
