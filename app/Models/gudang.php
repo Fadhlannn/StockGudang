@@ -17,8 +17,13 @@ class gudang extends Model
         return $this->hasMany(StockSparepart::class);
     }
 
-    public function transaksi()
+    public function DataMasuk()
     {
-        return $this->hasMany(TransaksiSparepart::class);
+        return $this->hasMany(DataMasuk::class);
+    }
+
+    public function bagianGudang()
+    {
+        return $this->hasMany(BagianGudang::class);
     }
 }

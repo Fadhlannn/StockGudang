@@ -11,13 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('mekanik', function (Blueprint $table) {
+        Schema::create('detail_rusak', function (Blueprint $table) {
             $table->id();
-            $table->string('nama');
-            $table->string('nip')->unique(); // Nomor identitas pengemudi
-            $table->string('no_hp');
-            $table->string('alamat')->nullable();
-            $table->foreignId('gudang_id')->constrained('gudang')->onDelete('cascade');
+            $table->string('jenis_rusak');
+            $table->foreignId('kode_rusak_id')->constrained('kode_rusak')->onDelete('cascade'); // bus yang dikerjakan
             $table->timestamps();
         });
     }

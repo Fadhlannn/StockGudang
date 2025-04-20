@@ -17,7 +17,7 @@ class Sparepart extends Model
         return $this->hasMany(StockSparepart::class);
     }
 
-    public function transaksi()
+    public function transaksi() 
     {
         return $this->hasMany(TransaksiSparepart::class);
     }

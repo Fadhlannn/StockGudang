@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('nomor_polisi')->unique();
             $table->string('nomor_body')->unique();
-            $table->integer('telelpon');
             $table->timestamps();
             $table->foreignId('route_id')->nullable()->constrained('routes')->onDelete('set null');
             $table->foreignId('pengemudi_id')->nullable()->constrained('pengemudi')->onDelete('set null');

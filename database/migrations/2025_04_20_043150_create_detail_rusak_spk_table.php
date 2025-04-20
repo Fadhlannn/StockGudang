@@ -11,13 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('mekanik', function (Blueprint $table) {
+        Schema::create('detail_rusak_spk', function (Blueprint $table) {
             $table->id();
-            $table->string('nama');
-            $table->string('nip')->unique(); // Nomor identitas pengemudi
-            $table->string('no_hp');
-            $table->string('alamat')->nullable();
-            $table->foreignId('gudang_id')->constrained('gudang')->onDelete('cascade');
+            $table->foreignId('spk_id')->constrained('spk')->onDelete('cascade');
+            $table->foreignId('detail_rusak_id')->constrained('detail_rusak')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -27,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('detail_rusak_spk');
     }
 };

@@ -30,10 +30,6 @@
                 </div>
                 <div class="row mb-3">
                     <div class="col">
-                        <label for="no_pk" class="form-label">No Induk</label>
-                        <input type="text" name="no_pk" class="form-control" required>
-                    </div>
-                    <div class="col">
                         <label for="nama_pengemudi" class="form-label">Nama Pengemudi</label>
                         <input type="text" name="nama_pengemudi" class="form-control" required>
                     </div>
@@ -52,12 +48,24 @@
                         <label for="route" class="form-label">Nomor Body</label>
                         <input type="text" name="route" class="form-control" required>
                     </div>
+                    <div class="col">
+                        <label for="km_standar" class="form-label">KM Standar</label>
+                        <input type="number" name="km_standar" class="form-control" required>
+                    </div>
                 </div>
 
                 <div class="row mb-3">
                     <div class="col">
-                        <label for="km_standar" class="form-label">KM Standar</label>
-                        <input type="number" name="km_standar" class="form-control" required>
+                        <label for="jenis_kerusakan" class="form-label">Kode Kerusakan</label>
+                        <input type="text" name="jenis_kerusakan" class="form-control" required>
+                    </div>
+                    <div class="col">
+                        <label for="jenis_kerusakan" class="form-label">Jenis Kerusakan</label>
+                        <input type="text" name="jenis_kerusakan" class="form-control" required>
+                    </div>
+                    <div class="col">
+                        <label for="jenis_kerusakan" class="form-label">Jenis Kerusakan</label>
+                        <input type="text" name="jenis_kerusakan" class="form-control" required>
                     </div>
                     <div class="col">
                         <label for="jenis_kerusakan" class="form-label">Jenis Kerusakan</label>

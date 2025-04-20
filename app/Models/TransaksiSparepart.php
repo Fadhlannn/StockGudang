@@ -19,6 +19,6 @@ class TransaksiSparepart extends Model
 
     public function gudang()
     {
-        return $this->belongsTo(gudang::class);
+        return $this->belongsTo(Gudang::class);
     }
 }

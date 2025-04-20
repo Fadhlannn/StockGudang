@@ -15,6 +15,7 @@ use App\Http\Controllers\RiwayatController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DataMasukController;
 use App\Models\Sparepart;
 
 Route::get('/', [AuthController::class, 'pagelogin'])->name('login');
@@ -89,6 +90,10 @@ Route::middleware(['auth', role_menu::class . ':Stok'])->group(function () {
     Route::get('/stok', [StockController::class, 'index'])->name('stok.index');
 });
 
-Route::get('/DataMasuk', [AdminController::class, 'DataMasuk'])->name('DataMasuk');
+Route::get('/DataMasuk', [DataMasukController::class, 'index'])->name('DataMasuk');
+Route::post('/DataMasuk', [DataMasukController::class, 'store'])->name('dataMasuk.store');
+Route::get('/DataMasuk/{dataMasuk}/edit', [DataMasukController::class, 'edit'])->name('dataMasuk.edit');
+Route::put('/DataMasuk/{dataMasuk}', [DataMasukController::class, 'update'])->name('dataMasuk.update');
+Route::delete('/DataMasuk/{dataMasuk}', [DataMasukController::class, 'destroy'])->name('dataMasuk.destroy');
 
 Route::get('/Spk', [AdminController::class, 'Spk'])->name('Spk');

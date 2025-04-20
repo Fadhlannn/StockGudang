@@ -18,6 +18,10 @@ return new class extends Migration
             $table->foreignId('pengemudi_id')->nullable()->constrained('pengemudi')->onDelete('set null');
             $table->foreignId('mekanik_id')->nullable()->constrained('mekanik')->onDelete('set null'); // Nama teknisi
             $table->foreignId('bagian_gudang_id')->nullable()->constrained('bagian_gudang')->onDelete('set null');
+            $table->foreignId('kode_rusak_id')->constrained('kode_rusak')->onDelete('cascade');
+            $table->foreignId('gudang_id')->constrained('gudang')->onDelete('cascade');
+            $table->date('tanggal_keluar')->nullable();
+            $table->string('km_standar');
             $table->text('deskripsi_pekerjaan'); // misal: Ganti oli & rem
             $table->date('tanggal_spk');
             $table->timestamps();

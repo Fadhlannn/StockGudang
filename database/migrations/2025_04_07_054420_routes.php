@@ -17,7 +17,6 @@ return new class extends Migration
             $table->string('asal');
             $table->string('tujuan');
             $table->integer('jarak_km')->nullable();
-            $table->string('durasi_perkiraan')->nullable();
             $table->timestamps();
         });
     }

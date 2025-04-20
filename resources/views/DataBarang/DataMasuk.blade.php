@@ -23,122 +23,247 @@
                         <th>Gudang</th>
                         <th>Bagian Gudang</th>
                         <th>Keterangan</th>
-                        <th>Aksi</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {{-- Contoh data dummy --}}
+                    @foreach ($dataMasuk as $t)
                     <tr>
-                        <td>1</td>
-                        <td>2025-04-07</td>
-                        <td>Filter Oli</td>
-                        <td>10</td>
-                        <td>PT Oli Indo</td>
-                        <td>Jakarta</td>
-                        <td>Agus</td>
-                        <td>Stok Awal</td>
+                        <td>{{ $t->no_order }}</td>
+                        <td>{{ \Carbon\Carbon::parse($t->Tanggal_masuk)->translatedFormat('d F Y') }}</td>
+                        <td>{{ $t->sparepart->name ?? '-' }}</td>
+                        <td>{{ $t->jumlah }}</td>
+                        <td>{{ $t->suplier->nama ?? '-' }}</td>
+                        <td>{{ $t->gudang->nama_gudang ?? '-' }}</td>
+                        <td>{{ $t->bagianGudang->nama ?? '-' }}</td>
+                        <td>{{ $t->keterangan }}</td>
                         <td>
-                            <a href="#" class="btn btn-sm btn-warning">Edit</a>
-                            <a href="#" class="btn btn-sm btn-danger">Hapus</a>
+                           <!-- Tambahkan data-bs-target dan data-bs-toggle -->
+                            <a href="#" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editModal{{ $t->id }}">Edit</a>
+                            <form action="{{ route('dataMasuk.destroy', $t->id) }}" method="POST" style="display:inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')">Hapus</button>
+                            </form>
+
                         </td>
                     </tr>
-                    {{-- @foreach ($dataMasuk as $item) nanti untuk dinamis --}}
+                    @endforeach
                 </tbody>
             </table>
         </div>
     </div>
 </div>
 
-
 <!-- Modal Tambah Data Masuk -->
 <div class="modal fade" id="modalTambahDataMasuk" tabindex="-1" aria-labelledby="modalTambahDataMasukLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <form action="#" method="POST">
-          @csrf
-          <div class="modal-header">
-            <h5 class="modal-title" id="modalTambahDataMasukLabel">Tambah Data Barang Masuk</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
-          </div>
-          <div class="modal-body">
-            <div class="row mb-3">
-              <div class="col-md-4x ">
-                <label for="No_Order" class="form-label">No Order</label>
-                <input type="number" class="form-control" id="No_Order" name="No_Order" required>
-              </div>
-              <div class="col-md-4">
-                <label for="tanggal_masuk" class="form-label">Tanggal Masuk</label>
-                <input type="date" class="form-control" id="tanggal_masuk" name="tanggal_masuk" required>
-              </div>
-              <div class="col-md-4">
-                <label for="nama_barang" class="form-label">Nama Barang</label>
-                <input type="text" class="form-control" id="nama_barang" name="nama_barang" required>
-              </div>
-            </div>
-            <div class="row mb-3">
-              <div class="col-md-4">
-                <label for="jumlah" class="form-label">Jumlah</label>
-                <input type="number" class="form-control" id="jumlah" name="jumlah" required>
-              </div>
-              <div class="col-md-4">
-                <label for="supplier" class="form-label">Supplier</label>
-                <input type="text" class="form-control" id="supplier" name="supplier">
-              </div>
-            </div>
+        <div class="modal-content">
+            <form action="{{ route('dataMasuk.store') }}" method="POST">
+                @csrf
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTambahDataMasukLabel">Tambah Data Barang Masuk</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label for="no_order" class="form-label">No Order</label>
+                            <input type="number" class="form-control" id="no_order" name="no_order" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="Tanggal_masuk" class="form-label">Tanggal Masuk</label>
+                            <input type="date" class="form-control" id="Tanggal_masuk" name="Tanggal_masuk" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="sparepart_id" class="form-label">Nama Barang</label>
+                            <select class="form-select" id="sparepart_id" name="sparepart_id" required>
+                                <option value="">-- Pilih Barang --</option>
+                                @foreach ($spareparts as $s)
+                                <option value="{{ $s->id }}">{{ $s->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label for="jumlah" class="form-label">Jumlah</label>
+                            <input type="number" class="form-control" id="jumlah" name="jumlah" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="supliers_id" class="form-label">Supplier</label>
+                            <select class="form-select" id="supliers_id" name="supliers_id" required>
+                                <option value="">-- Pilih Supplier --</option>
+                                @foreach ($supliers as $s)
+                                <option value="{{ $s->id }}">{{ $s->nama }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="gudang_id" class="form-label">Gudang</label>
+                        <select class="form-select" id="gudang_id" name="gudang_id" required>
+                            <option value="">-- Pilih Gudang --</option>
+                            @foreach ($gudangs as $g)
+                                <option value="{{ $g->id }}" {{ old('gudang_id') == $g->id ? 'selected' : '' }}>{{ $g->nama_gudang }}</option>
+                            @endforeach
+                        </select>
+                    </div>
 
-            {{-- Dropdown Gudang --}}
-            <div class="mb-3">
-              <label for="gudang_id" class="form-label">Gudang</label>
-              <select class="form-select" id="gudang_id" name="gudang_id" required>
-                <option value="">-- Pilih Gudang --</option>
-                <option value="1">Gudang A</option>
-                <option value="2">Gudang B</option>
-                {{-- Nanti pakai @foreach dari $gudangs --}}
-              </select>
-            </div>
+                    <div class="mb-3">
+                        <label for="bagian_gudang_id" class="form-label">Bagian Gudang</label>
+                        <select class="form-select" id="bagian_gudang_id" name="bagian_gudang_id" disabled required>
+                            <option value="">-- Pilih Gudang terlebih dahulu --</option>
+                        </select>
+                    </div>
 
-            {{-- Dropdown Bagian Gudang --}}
-            <div class="mb-3">
-              <label for="bagian_gudang_id" class="form-label">Bagian Gudang</label>
-              <select class="form-select" id="bagian_gudang_id" name="bagian_gudang_id" disabled>
-                <option value="">-- Pilih Gudang terlebih dahulu --</option>
-                {{-- Nanti diisi dinamis setelah gudang dipilih --}}
-              </select>
-            </div>
 
-            <div class="mb-3">
-              <label for="keterangan" class="form-label">Keterangan</label>
-              <textarea class="form-control" id="keterangan" name="keterangan" rows="2"></textarea>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-            <button type="submit" class="btn btn-success">Simpan</button>
-          </div>
-        </form>
-      </div>
+                    <div class="mb-3">
+                        <label for="keterangan" class="form-label">Keterangan</label>
+                        <textarea class="form-control" id="keterangan" name="keterangan" rows="2"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-success">Simpan</button>
+                </div>
+            </form>
+        </div>
     </div>
-  </div>
+</div>
 
-  @push('scripts')
-  <script>
-    // Simulasi aktifkan dropdown bagian gudang (tanpa AJAX dulu)
-    document.getElementById('gudang_id').addEventListener('change', function () {
-        const bagianDropdown = document.getElementById('bagian_gudang_id');
-        if (this.value) {
-            bagianDropdown.disabled = false;
-            // Simulasi ganti isi select (nanti diganti pakai AJAX)
-            bagianDropdown.innerHTML = `
-                <option value="">-- Pilih Bagian --</option>
-                <option value="1">Agus</option>
-                <option value="2">Budi</option>
-            `;
-        } else {
-            bagianDropdown.disabled = true;
-            bagianDropdown.innerHTML = '<option value="">-- Pilih Gudang terlebih dahulu --</option>';
-        }
+@foreach ($dataMasuk as $t)
+<!-- Modal Edit -->
+<div class="modal fade" id="editModal{{ $t->id }}" tabindex="-1" aria-labelledby="editModalLabel{{ $t->id }}" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form action="{{ route('dataMasuk.update', $t->id) }}" method="POST">
+                @csrf
+                @method('PUT')
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel{{ $t->id }}">Edit Data Masuk</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label for="no_order" class="form-label">No Order</label>
+                            <input type="number" class="form-control" name="no_order" value="{{ $t->no_order }}" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="Tanggal_masuk" class="form-label">Tanggal Masuk</label>
+                            <input type="date" class="form-control" name="Tanggal_masuk" value="{{ $t->Tanggal_masuk }}" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="sparepart_id" class="form-label">Nama Barang</label>
+                            <select class="form-select" name="sparepart_id" required>
+                                <option value="">-- Pilih Barang --</option>
+                                @foreach ($spareparts as $s)
+                                    <option value="{{ $s->id }}" {{ $s->id == $t->sparepart_id ? 'selected' : '' }}>{{ $s->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label for="jumlah" class="form-label">Jumlah</label>
+                            <input type="number" class="form-control" name="jumlah" value="{{ $t->jumlah }}" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="supliers_id" class="form-label">Supplier</label>
+                            <select class="form-select" name="supliers_id" required>
+                                <option value="">-- Pilih Supplier --</option>
+                                @foreach ($supliers as $s)
+                                    <option value="{{ $s->id }}" {{ $s->id == $t->supliers_id ? 'selected' : '' }}>{{ $s->nama }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="gudang_id" class="form-label">Gudang</label>
+                        <select class="form-select" name="gudang_id" required>
+                            <option value="">-- Pilih Gudang --</option>
+                            @foreach ($gudangs as $g)
+                                <option value="{{ $g->id }}" {{ $g->id == $t->gudang_id ? 'selected' : '' }}>{{ $g->nama_gudang }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="bagian_gudang_id" class="form-label">Bagian Gudang</label>
+                        <select class="form-select" name="bagian_gudang_id" required>
+                            <option value="">-- Pilih Bagian Gudang --</option>
+                            @foreach ($bagianGudangs as $bg)
+                                @if ($bg->gudang_id == $t->gudang_id)
+                                    <option value="{{ $bg->id }}" {{ $bg->id == $t->bagian_gudang_id ? 'selected' : '' }}>{{ $bg->nama }}</option>
+                                @endif
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="keterangan" class="form-label">Keterangan</label>
+                        <textarea class="form-control" name="keterangan" rows="2">{{ $t->keterangan }}</textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@endforeach
+
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const bagianGudangs = @json($bagianGudangs);
+        const gudangSelect = document.getElementById('gudang_id');
+        const bagianGudangSelect = document.getElementById('bagian_gudang_id');
+
+        // DEBUG: Tampilkan data bagian gudang di console
+        console.log('DATA BAGIAN GUDANGS:', bagianGudangs);
+
+        // Reset saat modal dibuka
+        const modal = document.getElementById('modalTambahDataMasuk');
+        modal.addEventListener('shown.bs.modal', function () {
+            bagianGudangSelect.innerHTML = '<option value="">-- Pilih Gudang terlebih dahulu --</option>';
+            bagianGudangSelect.disabled = true;
+            gudangSelect.value = ''; // reset gudang juga kalau perlu
+        });
+
+        // Event change gudang
+        gudangSelect.addEventListener('change', function () {
+            const selectedGudangId = this.value;
+            console.log('GUDANG DIPILIH:', selectedGudangId);
+
+            bagianGudangSelect.innerHTML = '<option value="">-- Pilih Bagian --</option>';
+            bagianGudangSelect.disabled = true;
+
+            if (selectedGudangId) {
+                // Pastikan id dibandingkan sebagai integer
+                const filtered = bagianGudangs.filter(bg => parseInt(bg.gudang_id) === parseInt(selectedGudangId));
+                console.log('HASIL FILTER:', filtered);
+
+                if (filtered.length > 0) {
+                    filtered.forEach(bg => {
+                        const option = document.createElement('option');
+                        option.value = bg.id;
+                        option.textContent = `${bg.nama}${bg.nip ? ' - ' + bg.nip : ''}`;
+                        bagianGudangSelect.appendChild(option);
+                    });
+
+                    bagianGudangSelect.disabled = false;
+                } else {
+                    bagianGudangSelect.innerHTML = '<option value="">-- Tidak ada bagian untuk gudang ini --</option>';
+                }
+            }
+        });
     });
-  </script>
-  @endpush
-
+</script>
+@endpush
 @endsection
