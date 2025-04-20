@@ -28,7 +28,5 @@ class AdminController extends Controller
     function DataMasuk(){
         return view('DataBarang.DataMasuk');
     }
-    function Spk(){
-        return view('DataBarang.Spk');
-    }
+
 }

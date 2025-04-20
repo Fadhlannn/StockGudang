@@ -16,6 +16,7 @@ use App\Http\Controllers\StockController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DataMasukController;
+use App\Http\Controllers\SpkController;
 use App\Models\Sparepart;
 
 Route::get('/', [AuthController::class, 'pagelogin'])->name('login');
@@ -96,4 +97,6 @@ Route::get('/DataMasuk/{dataMasuk}/edit', [DataMasukController::class, 'edit'])-
 Route::put('/DataMasuk/{dataMasuk}', [DataMasukController::class, 'update'])->name('dataMasuk.update');
 Route::delete('/DataMasuk/{dataMasuk}', [DataMasukController::class, 'destroy'])->name('dataMasuk.destroy');
 
-Route::get('/Spk', [AdminController::class, 'Spk'])->name('Spk');
+Route::get('/Spk',[SpkController::class,'index'])->name('Spk');
+Route::post('/Spk',[SpkController::class,'store'])->name('spk.store');
+// Route::get('/Spk',[SpkController::class,'index'])->name('Spk');
