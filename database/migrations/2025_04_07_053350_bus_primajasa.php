@@ -17,7 +17,6 @@ return new class extends Migration
             $table->string('nomor_body')->unique();
             $table->timestamps();
             $table->foreignId('route_id')->nullable()->constrained('routes')->onDelete('set null');
-            $table->foreignId('pengemudi_id')->nullable()->constrained('pengemudi')->onDelete('set null');
         });
     }
 
