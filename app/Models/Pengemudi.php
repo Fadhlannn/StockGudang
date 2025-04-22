@@ -18,12 +18,6 @@ class Pengemudi extends Model
         'alamat',
     ];
 
-    // Relasi ke BusPrimajasa (satu pengemudi bisa punya beberapa bus)
-    public function busPrimajasa()
-    {
-        return $this->hasMany(BusPrimajasa::class);
-    }
-
     // Relasi ke SPK (satu pengemudi bisa masuk ke beberapa SPK)
     public function spks()
     {

@@ -23,6 +23,7 @@ class Spk extends Model
         'km_standar',
         'deskripsi_pekerjaan',
         'tanggal_spk',
+        'route_id',
     ];
 
     // Relasi ke bus
@@ -65,5 +66,9 @@ class Spk extends Model
     public function detailRusaks()
     {
         return $this->belongsToMany(DetailRusak::class, 'detail_rusak_spk');
+    }
+    public function route()
+    {
+        return $this->belongsTo(Route::class, 'route_id');
     }
 }

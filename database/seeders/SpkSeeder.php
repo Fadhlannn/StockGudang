@@ -23,12 +23,11 @@ class SpkSeeder extends Seeder
                 'bagian_gudang_id' => 1, // Misal: bagian_gudang_id
                 'kode_rusak_id' => 1, // Misal: kode_rusak_id
                 'gudang_id' => 1, // Misal: gudang_id
+                'route_id' => 1,
                 'tanggal_keluar' => Carbon::now()->format('Y-m-d'),
                 'km_standar' => '100000', // Misal: kilometer standar
                 'deskripsi_pekerjaan' => 'Ganti oli & rem',
                 'tanggal_spk' => Carbon::now()->format('Y-m-d'),
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
             ],
             [
                 'nomor_spk' => 'SPK-0002',
@@ -41,9 +40,8 @@ class SpkSeeder extends Seeder
                 'tanggal_keluar' => Carbon::now()->format('Y-m-d'),
                 'km_standar' => '120000',
                 'deskripsi_pekerjaan' => 'Ganti ban & servis rem',
+                'route_id' => 1,
                 'tanggal_spk' => Carbon::now()->format('Y-m-d'),
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
             ],
             // Tambahkan SPK lainnya jika perlu
         ]);

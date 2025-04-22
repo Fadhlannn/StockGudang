@@ -50,6 +50,7 @@
         </div>
 
 
+
     @stack('scripts')
     </body>
         <!--   Core JS Files   -->

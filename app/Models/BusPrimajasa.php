@@ -26,8 +26,7 @@ class BusPrimajasa extends Model
     // Relasi ke Route
     public function route()
     {
-        return $this->belongsTo(Route::class);
+        return $this->belongsTo(Route::class,'route_id');
     }
 
-    // Relasi ke Pengemudi
 }

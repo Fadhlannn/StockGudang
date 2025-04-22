@@ -20,6 +20,7 @@ return new class extends Migration
             $table->foreignId('bagian_gudang_id')->nullable()->constrained('bagian_gudang')->onDelete('set null');
             $table->foreignId('kode_rusak_id')->constrained('kode_rusak')->onDelete('cascade');
             $table->foreignId('gudang_id')->constrained('gudang')->onDelete('cascade');
+            $table->foreignId('route_id')->constrained('routes')->onDelete('cascade'); // contoh
             $table->date('tanggal_keluar')->nullable();
             $table->string('km_standar');
             $table->text('deskripsi_pekerjaan'); // misal: Ganti oli & rem

@@ -23,4 +23,8 @@ class Route extends Model
     {
         return $this->hasMany(BusPrimajasa::class);
     }
+    public function spks()
+    {
+        return $this->hasMany(Spk::class);
+    }
 }

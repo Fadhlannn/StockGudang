@@ -99,4 +99,8 @@ Route::delete('/DataMasuk/{dataMasuk}', [DataMasukController::class, 'destroy'])
 
 Route::get('/Spk',[SpkController::class,'index'])->name('Spk');
 Route::post('/Spk',[SpkController::class,'store'])->name('spk.store');
+Route::get('/Spk/{spk}/edit',[SpkController::class,'edit'])->name('spk.edit');
+Route::put('/Spk/{spk}/edit',[SpkController::class,'update'])->name('spk.update');
+Route::delete('/Spk/{spk}',[SpkController::class,'destroy'])->name('spk.destroy');
+// Route::get('/Spk/get-route/{nomor_body}', [SpkController::class, 'getRoute']);
 // Route::get('/Spk',[SpkController::class,'index'])->name('Spk');
