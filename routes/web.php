@@ -15,8 +15,10 @@ use App\Http\Controllers\RiwayatController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DataKeluarController;
 use App\Http\Controllers\DataMasukController;
 use App\Http\Controllers\SpkController;
+
 use App\Models\Sparepart;
 
 Route::get('/', [AuthController::class, 'pagelogin'])->name('login');
@@ -102,5 +104,8 @@ Route::post('/Spk',[SpkController::class,'store'])->name('spk.store');
 Route::get('/Spk/{spk}/edit',[SpkController::class,'edit'])->name('spk.edit');
 Route::put('/Spk/{spk}/edit',[SpkController::class,'update'])->name('spk.update');
 Route::delete('/Spk/{spk}',[SpkController::class,'destroy'])->name('spk.destroy');
-// Route::get('/Spk/get-route/{nomor_body}', [SpkController::class, 'getRoute']);
-// Route::get('/Spk',[SpkController::class,'index'])->name('Spk');
+
+
+Route::get('/spk/{id}/data-keluar', [DataKeluarController::class, 'dataKeluar'])->name('dataKeluar');
+Route::post('/spk/{spk}/data-keluar', [DataKeluarController::class, 'store'])->name('data-keluar.store');
+

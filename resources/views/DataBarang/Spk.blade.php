@@ -33,7 +33,7 @@
                   <select name="nama_pengemudi" class="form-select" required>
                     <option value="">-- Pilih --</option>
                     @foreach ($pengemudi as $p)
-                      <option value="{{ $p->nama }}">{{ $p->nama }}</option>
+                      <option value="{{ $p->nama }}">{{ $p->nama }} - {{ $p->nip }}</option>
                     @endforeach
                   </select>
                 </div>
@@ -164,7 +164,7 @@
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus SPK ini?')">Hapus</button>
                             </form>
-                            <a href="" class="btn btn-sm btn-primary">Data Keluar</a>
+                            <a href="{{ route('dataKeluar', $spk->id) }}" class="btn btn-sm btn-primary">Data Keluar</a>
                         </td>
                     </tr>
                     @endforeach

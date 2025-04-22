@@ -71,4 +71,8 @@ class Spk extends Model
     {
         return $this->belongsTo(Route::class, 'route_id');
     }
+    public function dataKeluar()
+    {
+        return $this->hasMany(DataKeluar::class, 'spk_id');
+    }
 }

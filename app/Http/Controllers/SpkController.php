@@ -72,7 +72,7 @@ class SpkController extends Controller
         $detailRusakList = DetailRusak::where('kode_rusak_id', $spk->kode_rusak_id)->pluck('id');
         $spk->detailRusaks()->attach($detailRusakList);
 
-        return redirect()->route('spk')->with('success', 'SPK berhasil ditambahkan.');
+        return redirect()->route('Spk')->with('success', 'SPK berhasil ditambahkan.');
     }
 
     public function edit(Spk $spk)
@@ -130,4 +130,7 @@ class SpkController extends Controller
 
         return redirect()->route('Spk')->with('success', 'SPK berhasil dihapus.');
     }
+
+
+
 }
