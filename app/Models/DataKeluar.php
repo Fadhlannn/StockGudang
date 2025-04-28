@@ -32,16 +32,4 @@ class DataKeluar extends Model
         return $this->belongsTo(Sparepart::class);
     }
 
-    // Relasi ke Gudang
-    // public function gudang()
-    // {
-    //     return $this->belongsTo(Gudang::class);
-    // }
-
-    // // Relasi ke Bagian Gudang (diasumsikan sebagai user)
-    // public function bagianGudang()
-    // {
-    //     return $this->belongsTo(User::class, 'bagian_gudang_id');
-    // }
-
 }

@@ -21,8 +21,8 @@
                         <th>Jumlah</th>
                         <th>Supplier</th>
                         <th>Gudang</th>
-                        <th>Bagian Gudang</th>
                         <th>Keterangan</th>
+                        <th>Pengguna/role</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -35,11 +35,11 @@
                         <td>{{ $t->jumlah }}</td>
                         <td>{{ $t->suplier->nama ?? '-' }}</td>
                         <td>{{ $t->gudang->nama_gudang ?? '-' }}</td>
-                        <td>{{ $t->bagianGudang->nama ?? '-' }}</td>
                         <td>{{ $t->keterangan }}</td>
+                        <td>{{ $t->user->name ?? '-' }}/{{ $t->user->role->role ?? '-' }}</td>
                         <td>
                            <!-- Tambahkan data-bs-target dan data-bs-toggle -->
-                            <a href="#" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editModal{{ $t->id }}">Edit</a>
+                            {{-- <a href="#" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editModal{{ $t->id }}">Edit</a> --}}
                             <form action="{{ route('dataMasuk.destroy', $t->id) }}" method="POST" style="display:inline;">
                                 @csrf
                                 @method('DELETE')
@@ -76,6 +76,13 @@
                             <input type="date" class="form-control" id="Tanggal_masuk" name="Tanggal_masuk" required>
                         </div>
                         <div class="col-md-4">
+                            <label class="form-label">Penginput</label>
+                            <input type="text" class="form-control" value="{{ Auth::user()->name }}" disabled>
+                            <input type="hidden" name="user_id" value="{{ Auth::id() }}">
+                            <input type="text" class="form-control" value="{{ Auth::user()->role->role }}" disabled>
+                        </div>
+
+                        <div class="col-md-4">
                             <label for="sparepart_id" class="form-label">Nama Barang</label>
                             <select class="form-select" id="sparepart_id" name="sparepart_id" required>
                                 <option value="">-- Pilih Barang --</option>
@@ -109,15 +116,6 @@
                             @endforeach
                         </select>
                     </div>
-
-                    <div class="mb-3">
-                        <label for="bagian_gudang_id" class="form-label">Bagian Gudang</label>
-                        <select class="form-select" id="bagian_gudang_id" name="bagian_gudang_id" disabled required>
-                            <option value="">-- Pilih Gudang terlebih dahulu --</option>
-                        </select>
-                    </div>
-
-
                     <div class="mb-3">
                         <label for="keterangan" class="form-label">Keterangan</label>
                         <textarea class="form-control" id="keterangan" name="keterangan" rows="2"></textarea>
@@ -191,18 +189,6 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="bagian_gudang_id" class="form-label">Bagian Gudang</label>
-                        <select class="form-select" name="bagian_gudang_id" required>
-                            <option value="">-- Pilih Bagian Gudang --</option>
-                            @foreach ($bagianGudangs as $bg)
-                                @if ($bg->gudang_id == $t->gudang_id)
-                                    <option value="{{ $bg->id }}" {{ $bg->id == $t->bagian_gudang_id ? 'selected' : '' }}>{{ $bg->nama }}</option>
-                                @endif
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="mb-3">
                         <label for="keterangan" class="form-label">Keterangan</label>
                         <textarea class="form-control" name="keterangan" rows="2">{{ $t->keterangan }}</textarea>
                     </div>
@@ -216,54 +202,4 @@
     </div>
 </div>
 @endforeach
-
-
-@push('scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const bagianGudangs = @json($bagianGudangs);
-        const gudangSelect = document.getElementById('gudang_id');
-        const bagianGudangSelect = document.getElementById('bagian_gudang_id');
-
-        // DEBUG: Tampilkan data bagian gudang di console
-        console.log('DATA BAGIAN GUDANGS:', bagianGudangs);
-
-        // Reset saat modal dibuka
-        const modal = document.getElementById('modalTambahDataMasuk');
-        modal.addEventListener('shown.bs.modal', function () {
-            bagianGudangSelect.innerHTML = '<option value="">-- Pilih Gudang terlebih dahulu --</option>';
-            bagianGudangSelect.disabled = true;
-            gudangSelect.value = ''; // reset gudang juga kalau perlu
-        });
-
-        // Event change gudang
-        gudangSelect.addEventListener('change', function () {
-            const selectedGudangId = this.value;
-            console.log('GUDANG DIPILIH:', selectedGudangId);
-
-            bagianGudangSelect.innerHTML = '<option value="">-- Pilih Bagian --</option>';
-            bagianGudangSelect.disabled = true;
-
-            if (selectedGudangId) {
-                // Pastikan id dibandingkan sebagai integer
-                const filtered = bagianGudangs.filter(bg => parseInt(bg.gudang_id) === parseInt(selectedGudangId));
-                console.log('HASIL FILTER:', filtered);
-
-                if (filtered.length > 0) {
-                    filtered.forEach(bg => {
-                        const option = document.createElement('option');
-                        option.value = bg.id;
-                        option.textContent = `${bg.nama}${bg.nip ? ' - ' + bg.nip : ''}`;
-                        bagianGudangSelect.appendChild(option);
-                    });
-
-                    bagianGudangSelect.disabled = false;
-                } else {
-                    bagianGudangSelect.innerHTML = '<option value="">-- Tidak ada bagian untuk gudang ini --</option>';
-                }
-            }
-        });
-    });
-</script>
-@endpush
 @endsection

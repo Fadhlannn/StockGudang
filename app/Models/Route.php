@@ -13,6 +13,7 @@ class Route extends Model
 
     protected $fillable = [
         'kode_route',
+        'nama_route',
         'asal',
         'tujuan',
         'jarak_km',

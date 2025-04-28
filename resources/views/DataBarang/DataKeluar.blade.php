@@ -24,10 +24,6 @@
                         <td>{{ $spk->gudang->nama_gudang }}</td>
                     </tr>
                     <tr>
-                        <th>Bagian Gudang</th>
-                        <td>{{ $spk->bagianGudang->nama }} - {{ $spk->bagianGudang->nip }}</td>
-                    </tr>
-                    <tr>
                         <th>Mekanik</th>
                         <td>{{ $spk->mekanik->nama }} - {{ $spk->mekanik->nip }}</td>
                     </tr>

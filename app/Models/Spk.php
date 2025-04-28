@@ -16,7 +16,6 @@ class Spk extends Model
         'bus_primajasa_id',
         'pengemudi_id',
         'mekanik_id',
-        'bagian_gudang_id',
         'kode_rusak_id',
         'gudang_id',
         'tanggal_keluar',
@@ -24,6 +23,7 @@ class Spk extends Model
         'deskripsi_pekerjaan',
         'tanggal_spk',
         'route_id',
+        'user_id',
     ];
 
     // Relasi ke bus
@@ -42,12 +42,6 @@ class Spk extends Model
     public function mekanik()
     {
         return $this->belongsTo(Mekanik::class, 'mekanik_id');
-    }
-
-    // Relasi ke bagian gudang
-    public function bagianGudang()
-    {
-        return $this->belongsTo(BagianGudang::class, 'bagian_gudang_id');
     }
 
     // Relasi ke kode rusak
@@ -74,5 +68,9 @@ class Spk extends Model
     public function dataKeluar()
     {
         return $this->hasMany(DataKeluar::class, 'spk_id');
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

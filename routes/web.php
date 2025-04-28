@@ -10,6 +10,7 @@ use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\BusController;
 use App\Http\Controllers\SparepartContolller;
 use App\Http\Controllers\RiwayatController;
 use App\Http\Controllers\StockController;
@@ -17,9 +18,9 @@ use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DataKeluarController;
 use App\Http\Controllers\DataMasukController;
+use App\Http\Controllers\PengemudiController;
+use App\Http\Controllers\RouteController;
 use App\Http\Controllers\SpkController;
-
-use App\Models\Sparepart;
 
 Route::get('/', [AuthController::class, 'pagelogin'])->name('login');
 Route::post('/', [AuthController::class, 'login']);
@@ -102,10 +103,28 @@ Route::delete('/DataMasuk/{dataMasuk}', [DataMasukController::class, 'destroy'])
 Route::get('/Spk',[SpkController::class,'index'])->name('Spk');
 Route::post('/Spk',[SpkController::class,'store'])->name('spk.store');
 Route::get('/Spk/{spk}/edit',[SpkController::class,'edit'])->name('spk.edit');
-Route::put('/Spk/{spk}/edit',[SpkController::class,'update'])->name('spk.update');
+Route::put('/Spk/{spk}',[SpkController::class,'update'])->name('spk.update');
 Route::delete('/Spk/{spk}',[SpkController::class,'destroy'])->name('spk.destroy');
-
+Route::get('/get-nip-pengemudi', [SpkController::class, 'getNipPengemudi'])->name('get-nip-pengemudi');
+Route::get('/get-route-polisi', [SpkController::class, 'getRoutePolisi'])->name('get-route-polisi');
 
 Route::get('/spk/{id}/data-keluar', [DataKeluarController::class, 'dataKeluar'])->name('dataKeluar');
 Route::post('/spk/{spk}/data-keluar', [DataKeluarController::class, 'store'])->name('data-keluar.store');
+
+
+Route::get('/bus', [BusController::class, 'index'])->name('Bus');
+Route::post('/bus', [BusController::class, 'store'])->name('bus.store');
+Route::put('/bus/{id}/update', [BusController::class, 'update'])->name('bus.update');
+Route::delete('/bus/{bus}', [BusController::class, 'destroy'])->name('bus.destroy');
+
+
+Route::get('/Pengemudi', [PengemudiController::class, 'index'])->name('Pengemudi');
+Route::post('/Pengemudi', [PengemudiController::class, 'store'])->name('pengemudi.store');
+Route::put('/Pengemudi/{id}/update', [PengemudiController::class, 'update'])->name('pengemudi.update');
+Route::delete('/Pengemudi/{id}', [PengemudiController::class, 'destroy'])->name('pengemudi.destroy');
+
+Route::get('/Route', [RouteController::class, 'index'])->name('Route');
+Route::post('/Route', [RouteController::class, 'store'])->name('route.store');
+Route::put('/routes/{id}', [RouteController::class, 'update'])->name('route.update');
+Route::delete('/routes/{id}', [RouteController::class, 'destroy'])->name('route.destroy');
 

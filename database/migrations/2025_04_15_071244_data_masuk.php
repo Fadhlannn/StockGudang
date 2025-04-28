@@ -19,7 +19,6 @@ return new class extends Migration
             $table->integer('jumlah');
             $table->foreignId('supliers_id')->constrained('supliers')->onDelete('cascade');
             $table->foreignId('gudang_id')->constrained('gudang')->onDelete('cascade');
-            $table->foreignId('bagian_gudang_id')->constrained('bagian_gudang')->onDelete('cascade');
             $table->string('keterangan');
             $table->timestamps();
         });

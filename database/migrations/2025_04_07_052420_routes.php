@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('routes', function (Blueprint $table) {
             $table->id();
-            $table->string('kode_route')->unique(); // Misal: R-JKT-BDG
+            $table->string('kode_route')->unique();
+            $table->string('nama_route')->nullable();
             $table->string('asal');
             $table->string('tujuan');
             $table->integer('jarak_km')->nullable();

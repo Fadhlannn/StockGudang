@@ -6,19 +6,18 @@ use Illuminate\Http\Request;
 use App\Models\DataMasuk;
 use App\Models\Supliers;
 use App\Models\gudang;
-use App\Models\BagianGudang;
 use App\Models\Sparepart;
 use App\Models\StockSparepart;
+use Illuminate\Support\Facades\Auth;
 
 class DataMasukController extends Controller
 {
     public function index(){
-        $dataMasuk = DataMasuk::with(['sparepart', 'suplier', 'gudang', 'bagianGudang'])->get();
+        $dataMasuk = DataMasuk::with(['user','sparepart', 'suplier', 'gudang'])->get();
         $spareparts = Sparepart::all();
         $supliers = Supliers::all();
         $gudangs = Gudang::all();
-        $bagianGudangs = BagianGudang::all();
-        return view('DataBarang.DataMasuk', compact('dataMasuk','spareparts', 'supliers', 'gudangs', 'bagianGudangs'));
+        return view('DataBarang.DataMasuk', compact('dataMasuk','spareparts', 'supliers', 'gudangs'));
     }
 
     /**
@@ -33,11 +32,16 @@ class DataMasukController extends Controller
             'jumlah' => 'required|integer',
             'supliers_id' => 'required|exists:supliers,id',
             'gudang_id' => 'required|exists:gudang,id',
-            'bagian_gudang_id' => 'required|exists:bagian_gudang,id',
             'keterangan' => 'nullable|string',
         ]);
 
-        DataMasuk::create($request->all());
+
+
+        DataMasuk::create(array_merge(
+            $request->all(),
+            ['user_id' => Auth::id()]
+        ));
+
         $stok = StockSparepart::where('sparepart_id', $request->sparepart_id)
         ->where('gudang_id', $request->gudang_id)
         ->first();
@@ -66,9 +70,8 @@ class DataMasukController extends Controller
         $spareparts = Sparepart::all();
         $supliers = Supliers::all();
         $gudangs = Gudang::all();
-        $bagianGudangs = BagianGudang::all();
 
-        return view('dataMasuk.edit', compact('dataMasuk', 'spareparts', 'supliers', 'gudangs', 'bagianGudangs'));
+        return view('dataMasuk.edit', compact('dataMasuk', 'spareparts', 'supliers', 'gudangs'));
     }
 
     /**
@@ -83,7 +86,6 @@ class DataMasukController extends Controller
             'jumlah' => 'required|integer',
             'supliers_id' => 'required|exists:supliers,id',
             'gudang_id' => 'required|exists:gudang,id',
-            'bagian_gudang_id' => 'required|exists:bagian_gudang,id',
             'keterangan' => 'nullable|string',
         ]);
 

@@ -18,8 +18,8 @@ class DataMasuk extends Model
         'jumlah',
         'supliers_id',
         'gudang_id',
-        'bagian_gudang_id',
         'keterangan',
+        'user_id',
     ];
 
     /**
@@ -46,11 +46,8 @@ class DataMasuk extends Model
         return $this->belongsTo(Gudang::class);
     }
 
-    /**
-     * Relasi ke Bagian Gudang
-     */
-    public function bagianGudang()
+    public function user()
     {
-        return $this->belongsTo(BagianGudang::class);
+        return $this->belongsTo(User::class);
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Role;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
@@ -12,7 +13,8 @@ class RegisterController extends Controller
     // Menampilkan form register (jika pakai web.php)
     public function showRegistrationForm()
     {
-        return view('auth.register'); // Pastikan file auth/register.blade.php ada
+        $role = Role::all();
+        return view('auth.register', compact('role')); // Pastikan file auth/register.blade.php ada
     }
 
     // Menangani proses registrasi
@@ -23,14 +25,21 @@ class RegisterController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
+            'nip' => 'nullable|string|max:20',
+            'alamat' => 'nullable|string|max:255',
+            'nomor_telepon' => 'nullable|string|max:15',
+            'role_id' => 'required|exists:role,id', // Pastikan role_id valid dan ada di tabel roles
         ]);
 
-        // Ambil role "user" (pastikan role user ada di tabel roles)
+        // Membuat user baru
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role_id' => 2,
+            'nip' => $request->nip,
+            'alamat' => $request->alamat,
+            'nomor_telepon' => $request->nomor_telepon,
+            'role_id' => $request->role_id, // Mendapatkan role_id dari form
         ]);
 
         // Redirect ke halaman home atau dashboard

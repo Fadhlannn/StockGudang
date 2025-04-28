@@ -70,28 +70,34 @@ Tip 2: you can also add an image using data-image tag
                     </div>
                 </li>
             @endif
+            @if(auth()->user()->hasAccessTo('Bus'))
+            <li class="nav-item @if($activePage == 'Bus') active @endif">
+                <a class="nav-link" href="{{route('Bus')}}">
+                    <i class="fa-solid fa-screwdriver-wrench"></i>
+                    <p>{{ __("Bus") }}</p>
+                </a>
+            </li>
+            @endif
+
+            <li class="nav-item @if($activePage == 'Pengemudi') active @endif">
+                <a class="nav-link" href="{{route('Pengemudi')}}">
+                    <i class="fa-solid fa-screwdriver-wrench"></i>
+                    <p>{{ __("Pengemudi") }}</p>
+                </a>
+            </li>
+
+            <li class="nav-item @if($activePage == 'Route') active @endif">
+                <a class="nav-link" href="{{route('Route')}}">
+                    <i class="fa-solid fa-screwdriver-wrench"></i>
+                    <p>{{ __("Route") }}</p>
+                </a>
+            </li>
 
             @if(auth()->user()->hasAccessTo('Sparepart'))
             <li class="nav-item @if($activePage == 'Sparepart') active @endif">
                 <a class="nav-link" href="{{ route('Sparepart') }}">
                     <i class="fa-solid fa-screwdriver-wrench"></i>
                     <p>{{ __("Sparepart") }}</p>
-                </a>
-            </li>
-            @endif
-            @if(auth()->user()->hasAccessTo('Transaksi'))
-            <li class="nav-item @if($activePage == 'Transaksi') active @endif">
-                <a class="nav-link" href="{{ route('Transaksi') }}">
-                    <i class="fa-solid fa-arrow-right-arrow-left"></i>
-                    <p>{{ __("Transaksi") }}</p>
-                </a>
-            </li>
-            @endif
-            @if(auth()->user()->hasAccessTo('Riwayat'))
-            <li class="nav-item @if($activePage == 'Riwayat') active @endif">
-                <a class="nav-link" href="{{ route('Riwayat') }}">
-                    <i class="fa-solid fa-clock-rotate-left"></i>
-                    <p>{{ __("Riwayat") }}</p>
                 </a>
             </li>
             @endif
@@ -105,19 +111,23 @@ Tip 2: you can also add an image using data-image tag
             </li>
             @endif
 
+            @if(auth()->user()->hasAccessTo('DataMasuk'))
             <li class="nav-item @if($activePage == 'DataMasuk') active @endif">
                 <a class="nav-link" href="{{ route('DataMasuk') }}">
                     <i class="fa-solid fa-house"></i>
                     <p>{{ __("DataMasuk") }}</p>
                 </a>
             </li>
+            @endif
 
+            @if(auth()->user()->hasAccessTo('Spk'))
             <li class="nav-item @if($activePage == 'Spk') active @endif">
                 <a class="nav-link" href="{{ route('Spk') }}">
                     <i class="fa-solid fa-house"></i>
                     <p>{{ __("Spk") }}</p>
                 </a>
             </li>
+            @endif
 
             <li class="nav-item @if($activePage == 'LogOut') active @endif">
                 <a class="nav-link" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">

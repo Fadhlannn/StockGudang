@@ -13,7 +13,7 @@ class DataKeluarController extends Controller
     public function dataKeluar($id)
     {
         $spk = Spk::with(['detailRusaks'])->findOrFail($id);
-        $datakeluar = DataKeluar::with(['spk','sparepart','gudang','bagianGudang','jumlah','tanggal']);
+        $datakeluar = DataKeluar::with(['spk','sparepart','gudang','jumlah','tanggal']);
         $sparepart = Sparepart::all();
         $barangKeluars = $spk->barangKeluars ?? collect(); // ubah sesuai relasi kamu
 
@@ -46,7 +46,6 @@ class DataKeluarController extends Controller
             'spk_id' => $spk->id,
             'sparepart_id' => $request->sparepart_id,
             'gudang_id' => $spk->gudang_id,
-            'bagian_gudang_id' => $spk->bagian_gudang_id,
             'jumlah' => $request->jumlah,
             'tanggal_keluar' => $request->tanggal_keluar,
         ]);

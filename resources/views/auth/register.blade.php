@@ -18,22 +18,49 @@
                                             <input type="text" name="name" id="name" class="form-control" placeholder="{{ __('Name') }}" value="{{ old('name') }}" required autofocus>
                                         </div>
 
-                                        <div class="form-group">   {{-- is-invalid make border red --}}
+                                        <div class="form-group">
                                             <input type="email" name="email" value="{{ old('email') }}" placeholder="Enter email" class="form-control" required>
                                         </div>
 
                                         <div class="form-group">
                                             <input type="password" name="password" placeholder="Password" class="form-control" required >
                                         </div>
+
                                         <div class="form-group">
                                             <input type="password" name="password_confirmation" placeholder="Password Confirmation" class="form-control" required autofocus>
                                         </div>
 
-                                        <div class="footer text-center">
-                                            <div class="container text-center" >
-                                                <button type="submit" class="btn btn-warning btn-wd">{{ __('Create Free Account') }}</button>
-                                            </div>
+                                        <!-- NIP Field -->
+                                        <div class="form-group">
+                                            <input type="text" name="nip" value="{{ old('nip') }}" placeholder="NIP" class="form-control">
+                                        </div>
 
+                                        <!-- Alamat Field -->
+                                        <div class="form-group">
+                                            <input type="text" name="alamat" value="{{ old('alamat') }}" placeholder="Alamat" class="form-control">
+                                        </div>
+
+                                        <!-- Nomor Telepon Field -->
+                                        <div class="form-group">
+                                            <input type="text" name="nomor_telepon" value="{{ old('nomor_telepon') }}" placeholder="Nomor Telepon" class="form-control">
+                                        </div>
+
+                                        <!-- Role Field -->
+                                        <div class="form-group">
+                                            <label for="role_id">Role</label>
+                                            <select name="role_id" class="form-control" required>
+                                                @foreach($role as $r)
+                                                    <option value="{{ $r->id }}" {{ old('role_id') == $r->id ? 'selected' : '' }}>
+                                                        {{ $r->role }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+
+                                        <div class="footer text-center">
+                                            <div class="container text-center">
+                                                <button type="submit" class="btn btn-warning btn-wd">{{ __('Create Account') }}</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

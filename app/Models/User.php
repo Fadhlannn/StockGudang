@@ -25,7 +25,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role_id'
+        'role_id',
+        'nip',
+        'alamat',
+        'nomor_telepon'
     ];
 
     /**
@@ -63,6 +66,15 @@ class User extends Authenticatable
     public function hasAccessTo($menuName)
     {
         return $this->role && $this->role->hasAccessTo($menuName);
+    }
+
+    public function DataMasuk()
+    {
+        return $this->belongsTo(DataMasuk::class);
+    }
+    public function spk()
+    {
+        return $this->belongsTo(DataMasuk::class);
     }
 
 }
