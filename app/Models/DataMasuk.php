@@ -9,13 +9,14 @@ class DataMasuk extends Model
 {
     use HasFactory;
 
-    protected $table = 'DataMasuk'; // sesuai dengan nama tabel di migration
+    protected $table = 'datamasuk'; // sesuai dengan nama tabel di migration
 
     protected $fillable = [
         'no_order',
         'Tanggal_masuk',
         'sparepart_id',
         'jumlah',
+        'harga_satuan',
         'supliers_id',
         'gudang_id',
         'keterangan',

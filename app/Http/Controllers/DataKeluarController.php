@@ -48,6 +48,7 @@ class DataKeluarController extends Controller
             'gudang_id' => $spk->gudang_id,
             'jumlah' => $request->jumlah,
             'tanggal_keluar' => $request->tanggal_keluar,
+            'harga_satuan' => $stok->harga_satuan ?? 0,
         ]);
 
         return redirect()->route('dataKeluar', $spkId)->with('success', 'Data barang keluar berhasil disimpan!');

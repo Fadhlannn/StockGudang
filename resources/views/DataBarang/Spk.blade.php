@@ -3,7 +3,6 @@
 @section('content')
 <div class="container mt-4">
     <h2 class="mb-4">Daftar Surat Perintah Kerja (SPK)</h2>
-
     <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#modalTambahDataMasuk">
         Tambah SPK
     </button>
@@ -209,167 +208,6 @@
         myModal.show();
     </script>
     @endif
-
-<!-- Modal -->
-<div class="modal fade" id="#modalEditSpk{{ $spk->id }}" tabindex="-1" aria-labelledby="modalSpkLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <form action="{{ route('spk.update', $spk->id) }}" method="POST">
-            @csrf
-            @method('PUT')
-            <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="modalSpkLabel">Form SPK</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                  {{-- No PK & Penginput --}}
-                  <div class="row mb-3">
-                    <div class="col">
-                      <label for="no_pk" class="form-label">No PK</label>
-                      <input type="text" name="no_pk" class="form-control" value="{{ old('no_pk', $spk->no_pk) }}" required>
-                    </div>
-                    <div class="col">
-                      <label class="form-label">Penginput</label>
-                      <input type="text" class="form-control mb-1" value="{{ Auth::user()->name }}" disabled>
-                      <input type="hidden" name="user_id" value="{{ Auth::id() }}">
-                      <input type="text" class="form-control" value="{{ Auth::user()->role->role }}" disabled>
-                    </div>
-                  </div>
-
-                  {{-- Nama Pengemudi & NIP --}}
-                  <div class="row mb-3">
-                    <div class="col">
-                      <label for="nama_pengemudi" class="form-label">Nama Pengemudi</label>
-                      <input id="nama_pengemudi" list="list_pengemudi" name="nama_pengemudi"
-                        class="form-control @error('nama_pengemudi') is-invalid @enderror"
-                        value="{{ old('nama_pengemudi', $spk->nama_pengemudi) }}" required>
-                      <datalist id="list_pengemudi">
-                        @foreach ($pengemudi as $p)
-                          <option value="{{ $p->nama }}">
-                        @endforeach
-                      </datalist>
-                      @error('nama_pengemudi')
-                        <div class="invalid-feedback">
-                          {{ $message }}
-                        </div>
-                      @enderror
-                    </div>
-                    <div class="col">
-                      <label for="nip" class="form-label">NIP Pengemudi</label>
-                      <input type="text" id="nip" name="nip" class="form-control" value="{{ old('nip', $spk->nip) }}" readonly>
-                    </div>
-                  </div>
-
-                  {{-- Nomor Body, Route, Nomor Polisi --}}
-                  <div class="row mb-3">
-                    <div class="col">
-                      <label for="nomor_body" class="form-label">Nomor Body</label>
-                      <input type="text" id="nomor_body" name="nomor_body" class="form-control" value="{{ old('nomor_body', $spk->nomor_body) }}" required placeholder="Ketik Nomor Body...">
-                    </div>
-                    <div class="col">
-                      <label for="route" class="form-label">Route</label>
-                      <input type="text" id="route" name="route" class="form-control" value="{{ old('route', $spk->route) }}" readonly>
-                    </div>
-                    <div class="col">
-                      <label for="nomor_polisi" class="form-label">Nomor Polisi</label>
-                      <input type="text" id="nomor_polisi" name="nomor_polisi" class="form-control" value="{{ old('nomor_polisi', $spk->nomor_polisi) }}" readonly>
-                    </div>
-                  </div>
-
-                  {{-- KM Standar --}}
-                  <div class="mb-3">
-                    <label for="km_standar" class="form-label">KM Standar</label>
-                    <input type="number" name="km_standar" class="form-control" value="{{ old('km_standar', $spk->km_standar) }}" required>
-                  </div>
-
-                  {{-- Jenis Kerusakan --}}
-                  <div class="row mb-3">
-                    <div class="col">
-                        <label for="kode_rusak_id" class="form-label">Kode Rusak</label>
-                        <select name="kode_rusak_id" id="kode_rusak_id" class="form-select mb-2" required>
-                            <option value="">-- Pilih Kode Rusak --</option>
-                            @foreach($kodeRusak as $kode)
-                                <option value="{{ $kode->id }}" {{ old('kode_rusak_id', $spk->kode_rusak_id) == $kode->id ? 'selected' : '' }}>
-                                    {{ $kode->kode_rusak }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="col">
-                        <div id="jenis-rusak-container">
-                            <div class="jenis-rusak-item mb-2">
-                                <select name="jenis_rusak_id[]" class="form-select" disabled required>
-                                    <option value="">--Pilih Jenis Rusak--</option>
-                                    @foreach($detail_rusak as $detail)
-                                        <option value="{{ $detail->id }}" data-kode="{{ $detail->kode_rusak_id }}"
-                                            {{ is_array($spk->jenis_rusak_ids) && in_array($detail->id, $spk->jenis_rusak_ids) ? 'selected' : '' }}>
-                                            {{ $detail->jenis_rusak }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <button type="button" id="tambah-jenis-rusak" class="btn btn-sm btn-primary mt-2">Tambah Jenis Rusak</button>
-                    </div>
-                </div>
-
-                  {{-- Tanggal Masuk dan Keluar --}}
-                  <div class="row mb-3">
-                    <div class="col">
-                      <label for="tanggal_masuk" class="form-label">Tanggal Masuk</label>
-                      <input type="date" name="tanggal_masuk" class="form-control" value="{{ old('tanggal_masuk', $spk->tanggal_masuk) }}" readonly required>
-                    </div>
-                    <div class="col">
-                      <label for="tanggal_keluar" class="form-label">Tanggal Keluar</label>
-                      <input type="date" name="tanggal_keluar" class="form-control" value="{{ old('tanggal_keluar', $spk->tanggal_keluar) }}">
-                    </div>
-                  </div>
-
-                  {{-- Pool, Mekanik --}}
-                  <div class="row mb-3">
-                    <div class="col">
-                      <label for="pool" class="form-label">Pool</label>
-                      <select name="pool" id="pool" class="form-select" required>
-                        <option value="">-- Pilih Pool --</option>
-                        @foreach ($gudang as $g)
-                          <option value="{{ $g->id }}" {{ $spk->pool_id == $g->id ? 'selected' : '' }}>
-                            {{ $g->nama_gudang }}
-                          </option>
-                        @endforeach
-                      </select>
-                    </div>
-                    <div class="col">
-                      <label for="mekanik_id" class="form-label">Mekanik</label>
-                      <select name="mekanik_id" id="mekanik_id" class="form-select" disabled required>
-                        <option value="">-- Pilih Mekanik terlebih dahulu --</option>
-                        @foreach ($mekanik as $m)
-                          <option value="{{ $m->id }}" {{ $spk->mekanik_id == $m->id ? 'selected' : '' }}>
-                            {{ $m->nama }}
-                          </option>
-                        @endforeach
-                      </select>
-                    </div>
-                  </div>
-
-                  {{-- Keterangan --}}
-                  <div class="mb-3">
-                    <label for="keterangan" class="form-label">Keterangan</label>
-                    <textarea name="keterangan" class="form-control" rows="3">{{ old('keterangan', $spk->keterangan) }}</textarea>
-                  </div>
-
-                </div>
-
-                <div class="modal-footer">
-                  <button type="submit" class="btn btn-success">Simpan</button>
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                </div>
-
-              </div>
-        </form>
-    </div>
-</div>
-
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const kodeSelect = document.getElementById('kode_rusak_id');
@@ -481,7 +319,7 @@
 });
 
 
-    </script>
+</script>
 
 @push('scripts')
 <script>
@@ -495,51 +333,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     const modal = document.getElementById('modalTambahDataMasuk');
-    modal.addEventListener('shown.bs.modal', function () {
-        mekanikSelect.innerHTML = '<option value="">-- Pilih Mekanik terlebih dahulu --</option>';
-        mekanikSelect.disabled = true;
-        gudangSelect.value = ''; // reset gudang juga
-    });
-
-    gudangSelect.addEventListener('change', function () {
-        const selectedGudangId = this.value;
-
-            // Reset bagian gudang dan mekanik
-        mekanikSelect.innerHTML = '<option value="">-- Pilih Mekanik --</option>';
-        mekanikSelect.disabled = true;
-
-        if (selectedGudangId) {
-                // Filter mekanik berdasarkan gudang yang dipilih
-            const filteredMekanik = mekanik.filter(m => parseInt(m.gudang_id) === parseInt(selectedGudangId));
-            if (filteredMekanik.length > 0) {
-                filteredMekanik.forEach(m => {
-                    const option = document.createElement('option');
-                    option.value = m.id;
-                    option.textContent = `${m.nama}`;
-                    mekanikSelect.appendChild(option);
-                });
-                mekanikSelect.disabled = false;
-            } else {
-                mekanikSelect.innerHTML = '<option value="">-- Tidak ada mekanik untuk gudang ini --</option>';
-            }
-        }
-    });
-});
-</script>
-@endpush
-
-@push('scripts')
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-
-    const mekanik = @json($mekanik);            // Data mekanik
-    const gudangSelect = document.getElementById('pool');
-    const mekanikSelect = document.getElementById('mekanik_id');
-
-    console.log('DATA BAGIAN MEKANIK:', mekanik);
-
-
-    const modal = document.getElementById('modalEditSpk');
     modal.addEventListener('shown.bs.modal', function () {
         mekanikSelect.innerHTML = '<option value="">-- Pilih Mekanik terlebih dahulu --</option>';
         mekanikSelect.disabled = true;

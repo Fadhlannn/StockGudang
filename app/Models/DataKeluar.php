@@ -17,6 +17,7 @@ class DataKeluar extends Model
         'gudang_id',
         'bagian_gudang_id',
         'tanggal_keluar',
+        'harga_satuan',
         'jumlah',
     ];
 

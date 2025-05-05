@@ -93,6 +93,13 @@ Tip 2: you can also add an image using data-image tag
                 </a>
             </li>
 
+            <li class="nav-item @if($activePage == 'Mekanik') active @endif">
+                <a class="nav-link" href="{{route('Mekanik')}}">
+                    <i class="fa-solid fa-screwdriver-wrench"></i>
+                    <p>{{ __("Mekanik") }}</p>
+                </a>
+            </li>
+
             @if(auth()->user()->hasAccessTo('Sparepart'))
             <li class="nav-item @if($activePage == 'Sparepart') active @endif">
                 <a class="nav-link" href="{{ route('Sparepart') }}">

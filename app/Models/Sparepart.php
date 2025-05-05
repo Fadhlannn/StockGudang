@@ -26,4 +26,9 @@ class Sparepart extends Model
     {
         return $this->hasMany(DataKeluar::class);
     }
+    public function datamasuk()
+    {
+        return $this->hasMany(DataMasuk::class);
+    }
+
 }

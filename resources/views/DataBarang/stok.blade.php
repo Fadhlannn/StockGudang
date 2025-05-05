@@ -1,6 +1,5 @@
 @extends('layouts/app', ['activePage' => 'stok', 'title' => 'stok'])
 
-
 @section('content')
 <div class="container">
     <h2 class="mb-4">Stok Sparepart</h2>
@@ -28,6 +27,7 @@
                 <th>Nama Sparepart</th>
                 <th>Gudang</th>
                 <th>Jumlah Stok</th>
+                <th>Harga Standart</th>
                 <th>Harga Per Sparepart</th>
                 <th>Total Harga Stok</th>
             </tr>
@@ -35,20 +35,21 @@
         <tbody>
             @foreach ($stok as $index => $item)
             <tr>
-                <td>{{ $index + 1 }}</td>
-                <td>{{ $item->sparepart->name }}</td>
-                <td>{{ $item->gudang->nama_gudang}}</td>
+                {{-- <td>{{ ($stok->currentPage() - 1) * $stok->perPage() + $loop->iteration }}</td> --}}
+                <td>{{ $item->nama_sparepart }}</td>
+                <td>{{ $item->nama_gudang }}</td>
                 <td>{{ $item->jumlah_stok }}</td>
-                <td>Rp {{ number_format($item->sparepart->harga, 0, ',', '.') }}</td>
-                <td>Rp {{ number_format($item->jumlah_stok * $item->sparepart->harga, 0, ',', '.') }}</td>
+                <td>Rp {{ number_format($item->harga_standart, 0, ',', '.') }}</td>
+                <td>Rp {{ number_format($item->harga_rata_rata, 0, ',', '.') }}</td>
+                <td>Rp {{ number_format($item->total_harga_stok, 0, ',', '.') }}</td>
             </tr>
             @endforeach
         </tbody>
     </table>
-    <div class="d-flex justify-content-end mt-3">
+    {{-- <div class="d-flex justify-content-end mt-3">
         <div>
             {{ $stok->appends(request()->query())->links('pagination::bootstrap-5') }}
         </div>
-    </div>
+    </div> --}}
 </div>
 @endsection

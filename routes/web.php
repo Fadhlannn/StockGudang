@@ -18,6 +18,7 @@ use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DataKeluarController;
 use App\Http\Controllers\DataMasukController;
+use App\Http\Controllers\MekanikController;
 use App\Http\Controllers\PengemudiController;
 use App\Http\Controllers\RouteController;
 use App\Http\Controllers\SpkController;
@@ -128,3 +129,6 @@ Route::post('/Route', [RouteController::class, 'store'])->name('route.store');
 Route::put('/routes/{id}', [RouteController::class, 'update'])->name('route.update');
 Route::delete('/routes/{id}', [RouteController::class, 'destroy'])->name('route.destroy');
 
+
+Route::get('/Mekanik', [MekanikController::class, 'index'])->name('Mekanik');
+Route::post('/Mekanik', [MekanikController::class, 'store'])->name('mekanik.store');

@@ -21,9 +21,4 @@ class gudang extends Model
     {
         return $this->hasMany(DataMasuk::class);
     }
-
-    public function bagianGudang()
-    {
-        return $this->hasMany(BagianGudang::class);
-    }
 }
