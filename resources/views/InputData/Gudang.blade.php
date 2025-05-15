@@ -20,7 +20,7 @@
                                 ->where('can_access', true)
                                 ->exists()) --}}
                                 <div class="col-4 text-right">
-                                    <a href="#" class="btn btn-sm btn-default" data-toggle="modal" data-target="#createSupliermodal">Tambah Suplier</a>
+                                    <a href="#" class="btn btn-sm btn-default" data-toggle="modal" data-target="#createGudangmodal">Tambah Gudang Atau Pool</a>
                                 </div>
                             {{-- @endif --}}
 
@@ -43,23 +43,21 @@
                                 <tr>
                                     <th>No</th>
                                     <th>Nama</th>
-                                    <th>No Telepon</th>
                                     <th>Alamat</th>
                                     <th>Action</th>
                                 </tr>
                         </thead>
                         <tbody>
-                            @foreach ($supliers as $s)
+                            @foreach ($gudang as $g)
                                 <tr>
-                                    <td>{{ ($supliers->currentPage() - 1) * $supliers->perPage() + $loop->iteration }}</td>
-                                    <td>{{ $s->nama }}</td>
-                                    <td>{{ $s->telepon }}</td>
-                                    <td>{{ $s->alamat }}</td>
+                                    <td>{{ ($gudang->currentPage() - 1) * $gudang->perPage() + $loop->iteration }}</td>
+                                    <td>{{ $g->nama_gudang }}</td>
+                                    <td>{{ $g->lokasi }}</td>
                                     <td>
-                                        <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#editSuplierModal{{ $s->id }}">
+                                        <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#editGudangModal{{ $g->id }}">
                                             Edit
                                         </button>
-                                         <form action="{{ route('suplier.destroy', $s->id) }}" method="POST" style="display:inline;">
+                                         <form action="{{ route('gudang.destroy', $g->id) }}" method="POST" style="display:inline;">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Yakin ingin menghapus data ini?')">
@@ -68,10 +66,10 @@
                                         </form>
                                     </td>
                                 </tr>
-                                <div class="modal fade" id="editSuplierModal{{ $s->id }}" tabindex="-1" aria-hidden="true">
+                                <div class="modal fade" id="editGudangModal{{ $g->id }}" tabindex="-1" aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
-                                            <form method="POST" action="{{ route('suplier.update', $s->id) }}">
+                                            <form method="POST" action="{{ route('gudang.update', $g->id) }}">
                                                 @csrf
                                                 @method('PUT')
                                                 <div class="modal-header">
@@ -81,13 +79,10 @@
                                                 <div class="modal-body">
                                                     <div class="form-group">
                                                         <label>Nama</label>
-                                                        <input type="text" class="form-control" name="nama" value="{{ $s->nama }}" required>
-
-                                                        <label class="mt-2">Telepon</label>
-                                                        <input type="text" class="form-control" name="telepon" value="{{ $s->telepon }}" required>
+                                                        <input type="text" class="form-control" name="nama_gudang" value="{{ $g->nama_gudang }}" required>
 
                                                         <label class="mt-2">Alamat</label>
-                                                        <textarea class="form-control" name="alamat" required>{{ $s->alamat }}</textarea>
+                                                        <textarea class="form-control" name="lokasi" required>{{ $g->lokasi }}</textarea>
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">
@@ -102,32 +97,29 @@
                         </tbody>
                         </table>
                         <div class="d-flex justify-content-end mt-4">
-                            {{ $supliers->appends(request()->query())->links('pagination::bootstrap-5') }}
+                            {{ $gudang->appends(request()->query())->links('pagination::bootstrap-5') }}
                         </div>
                     </div>
                 </div>
             </div>
         </div>
        <!-- Modal Tambah Suplier -->
-<div class="modal fade" id="createSupliermodal" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="createGudangmodal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form method="POST" action="{{ route('suplier.store') }}">
+            <form method="POST" action="{{ route('gudang.store') }}">
                 @csrf
                 <div class="modal-header">
-                    <h5 class="modal-title">Tambah Suplier</h5>
+                    <h5 class="modal-title">Tambah gudang</h5>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
                         <label>Nama</label>
-                        <input type="text" class="form-control" name="nama" required>
+                        <input type="text" class="form-control" name="nama_gudang" required>
 
-                        <label class="mt-2">Telepon</label>
-                        <input type="text" class="form-control" name="telepon" required>
-
-                        <label class="mt-2">Alamat</label>
-                        <textarea class="form-control" name="alamat" required></textarea>
+                        <label class="mt-2">Lokasi</label>
+                        <textarea class="form-control" name="lokasi" required></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">

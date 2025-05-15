@@ -112,6 +112,13 @@ Tip 2: you can also add an image using data-image tag
                         </a>
                     </li>
 
+                    <li class="nav-item @if($activePage == 'Gudang') active @endif">
+                        <a class="nav-link" href="{{ route('Gudang') }}">
+                            <i class="fa-solid fa-screwdriver-wrench"></i>
+                            <p>{{ __("Gudang") }}</p>
+                        </a>
+                    </li>
+
                     </ul>
                 </div>
             </li>

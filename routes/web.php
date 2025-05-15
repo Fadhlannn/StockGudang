@@ -18,6 +18,7 @@ use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DataKeluarController;
 use App\Http\Controllers\DataMasukController;
+use App\Http\Controllers\GudangController;
 use App\Http\Controllers\MekanikController;
 use App\Http\Controllers\PengemudiController;
 use App\Http\Controllers\RouteController;
@@ -137,3 +138,8 @@ Route::get('/Supliers', [SupliersController::class, 'index'])->name('Supliers');
 Route::post('/Supliers', [SupliersController::class, 'store'])->name('suplier.store');
 Route::put('/Supliers/{id}', [SupliersController::class, 'update'])->name('suplier.update');
 Route::delete('/Supliers/{id}', [SupliersController::class, 'destroy'])->name('suplier.destroy');
+
+Route::get('/Gudang', [GudangController::class, 'index'])->name('Gudang');
+Route::post('/Gudang', [GudangController::class, 'store'])->name('gudang.store');
+Route::put('/Gudang/{id}', [GudangController::class, 'update'])->name('gudang.update');
+Route::delete('/Gudang/{id}', [GudangController::class, 'destroy'])->name('gudang.destroy');
