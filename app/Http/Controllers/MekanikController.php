@@ -37,32 +37,38 @@ class MekanikController extends Controller
         return redirect()->back()->with('success', 'Data mekanik berhasil ditambahkan.');
     }
 
-    // public function update(Request $request, $id){
+    public function update(Request $request, $id)
+    {
+        // Validasi input
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            'nip' => 'required|string|max:50|unique:mekanik,nip,' . $id, // Abaikan NIP milik sendiri
+            'no_hp' => 'required|string|max:15',
+            'alamat' => 'required|string',
+            'gudang_id' => 'required|exists:gudang,id',
+        ]);
 
-    //     $request->validate([
-    //         'kode_route' => 'required|unique:routes,kode_route,' . $id,
-    //         'nama_route' => 'required|string|max:255',
-    //         'asal' => 'required|string|max:255',
-    //         'tujuan' => 'required|string|max:255',
-    //         'jarak_km' => 'nullable|integer|min:0',
-    //     ]);
+        // Cari data mekanik berdasarkan ID
+        $mekanik = Mekanik::findOrFail($id);
 
-    //     $route = Route::findOrFail($id);
-    //     $route->update([
-    //         'kode_route' => $request->kode_route,
-    //         'nama_route' => $request->nama_route,
-    //         'asal' => $request->asal,
-    //         'tujuan' => $request->tujuan,
-    //         'jarak_km' => $request->jarak_km,
-    //     ]);
+        // Update data
+        $mekanik->update([
+            'nama' => $request->nama,
+            'nip' => $request->nip,
+            'no_hp' => $request->no_hp,
+            'alamat' => $request->alamat,
+            'gudang_id' => $request->gudang_id,
+        ]);
 
-    //     return redirect()->back()->with('success', 'Data route berhasil diperbarui.');
-    // }
+        // Redirect dengan pesan sukses
+        return redirect()->back()->with('success', 'Data mekanik berhasil diperbarui.');
+    }
 
-    // public function destroy($id){
-    //     $route = Route::findOrFail($id);
-    //     $route->delete();
 
-    //     return redirect()->back()->with('success', 'Data route berhasil dihapus.');
-    // }
+    public function destroy($id){
+        $mekanik = Mekanik::findOrFail($id);
+        $mekanik->delete();
+
+        return redirect()->back()->with('success', 'Data route berhasil dihapus.');
+    }
 }

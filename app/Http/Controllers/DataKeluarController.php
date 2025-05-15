@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Spk;
 use App\Models\Sparepart;
 use App\Models\DataKeluar;
+use App\Models\DataMasuk;
 use App\Models\StockSparepart;
 use Illuminate\Http\Request;
 
@@ -12,12 +13,16 @@ class DataKeluarController extends Controller
 {
     public function dataKeluar($id)
     {
-        $spk = Spk::with(['detailRusaks'])->findOrFail($id);
+        $spk = Spk::with(['detailRusaks','dataKeluar.sparepart'])->findOrFail($id);
         $datakeluar = DataKeluar::with(['spk','sparepart','gudang','jumlah','tanggal']);
         $sparepart = Sparepart::all();
-        $barangKeluars = $spk->barangKeluars ?? collect(); // ubah sesuai relasi kamu
+        $barangKeluars = $spk->dataKeluar ?? collect(); // ubah sesuai relasi kamu
+        $totalHarga = $spk->dataKeluar->sum(function ($item) {
+        return $item->jumlah * $item->harga_satuan;
+        });
 
-    return view('DataBarang.DataKeluar', compact('spk','barangKeluars','sparepart'));
+
+    return view('DataBarang.DataKeluar', compact('spk','barangKeluars','sparepart','totalHarga'));
     }
 
     public function store(Request $request, $spkId)
@@ -28,29 +33,67 @@ class DataKeluarController extends Controller
             'tanggal_keluar' => 'required|date',
         ]);
 
-        $spk = SPK::findOrFail($spkId);
+        // Pastikan SPK ditemukan
+        $spk = Spk::findOrFail($spkId);
 
+        // Ambil stok sparepart berdasarkan gudang dan sparepart_id
         $stok = StockSparepart::where('sparepart_id', $request->sparepart_id)
-                ->where('gudang_id', $spk->gudang_id)
-                ->first();
+                    ->where('gudang_id', $spk->gudang_id)
+                    ->orderBy('created_at', 'asc') // FIFO: urutkan berdasarkan tanggal masuk
+                    ->get();
 
-        if (!$stok || $stok->jumlah_stok < $request->jumlah) {
-            return redirect()->back()->withErrors(['jumlah' => 'Stok tidak mencukupi atau tidak ditemukan.']);
+        $totalHarga = 0;
+        $totalQty = $request->jumlah;
+        $jumlahKeluar = $totalQty;
+
+        foreach ($stok as $stokItem) {
+            if ($jumlahKeluar <= 0) break;
+
+            if ($stokItem->jumlah_stok >= $jumlahKeluar) {
+                $totalHarga += $jumlahKeluar * $stokItem->harga_satuan;
+                $stokItem->jumlah_stok -= $jumlahKeluar;
+                $stokItem->save();
+                $jumlahKeluar = 0;
+            } else {
+                $totalHarga += $stokItem->jumlah_stok * $stokItem->harga_satuan;
+                $jumlahKeluar -= $stokItem->jumlah_stok;
+                $stokItem->jumlah_stok = 0;
+                $stokItem->save();
+            }
         }
 
-        // Kurangi stok
-        $stok->jumlah_stok -= $request->jumlah;
-        $stok->save();
+        // Hitung rata-rata tertimbang
+        $hargaSatuanRata = $totalHarga / $totalQty;
 
+        // Simpan
         DataKeluar::create([
             'spk_id' => $spk->id,
             'sparepart_id' => $request->sparepart_id,
             'gudang_id' => $spk->gudang_id,
-            'jumlah' => $request->jumlah,
+            'jumlah' => $totalQty,
             'tanggal_keluar' => $request->tanggal_keluar,
-            'harga_satuan' => $stok->harga_satuan ?? 0,
+            'harga_satuan' => $hargaSatuanRata,
         ]);
 
         return redirect()->route('dataKeluar', $spkId)->with('success', 'Data barang keluar berhasil disimpan!');
     }
+
+  public function getSpareparts(Request $request)
+    {
+        $search = $request->q;
+
+        // Mengambil sparepart berdasarkan pencarian
+        $spareparts = Sparepart::where('name', 'like', '%' . $search . '%')->get();
+
+        $results = $spareparts->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'text' => $item->name,
+                'harga' => $item->harga
+            ];
+        });
+
+        return response()->json($results);
+    }
+
 }

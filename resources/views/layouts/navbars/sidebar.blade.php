@@ -12,14 +12,6 @@ Tip 2: you can also add an image using data-image tag
             </a>
         </div>
         <ul class="nav">
-            @if(auth()->user()->hasAccessTo('Dashboard'))
-            <li class="nav-item @if($activePage == 'dashboard') active @endif">
-                <a class="nav-link" href="{{ route('dashboard') }}">
-                    <i class="fa-solid fa-house"></i>
-                    <p>{{ __("dashboard") }}</p>
-                </a>
-            </li>
-            @endif
 
             @if(auth()->user()->hasRole('Admin') || auth()->user()->hasAccessTo('Konfigurasi'))
                 <li class="nav-item @if($activePage == 'Konfigurasi') active @endif">
@@ -70,35 +62,62 @@ Tip 2: you can also add an image using data-image tag
                     </div>
                 </li>
             @endif
-            @if(auth()->user()->hasAccessTo('Bus'))
-            <li class="nav-item @if($activePage == 'Bus') active @endif">
-                <a class="nav-link" href="{{route('Bus')}}">
-                    <i class="fa-solid fa-screwdriver-wrench"></i>
-                    <p>{{ __("Bus") }}</p>
+
+            @if(auth()->user()->hasRole('Admin') || auth()->user()->hasAccessTo('Input_Data'))
+            <li class="nav-item @if($activePage == 'Input_Data') active @endif">
+                <a class="nav-link" data-toggle="collapse" href="#Input_Data">
+                    <i class="fa-solid fa-sliders "></i>
+                    </i>
+                    <p>
+                        {{ __('Input_Data') }}
+                        <b class="caret"></b>
+                    </p>
                 </a>
+                <div class="collapse" id="Input_Data">
+                    <ul class="nav">
+                    @if(auth()->user()->hasAccessTo('Bus'))
+                    <li class="nav-item @if($activePage == 'Bus') active @endif">
+                        <a class="nav-link" href="{{route('Bus')}}">
+                            <i class="fa-solid fa-screwdriver-wrench"></i>
+                            <p>{{ __("Bus") }}</p>
+                        </a>
+                    </li>
+                    @endif
+
+                    <li class="nav-item @if($activePage == 'Pengemudi') active @endif">
+                        <a class="nav-link" href="{{route('Pengemudi')}}">
+                            <i class="fa-solid fa-screwdriver-wrench"></i>
+                            <p>{{ __("Pengemudi") }}</p>
+                        </a>
+                    </li>
+
+                    <li class="nav-item @if($activePage == 'Route') active @endif">
+                        <a class="nav-link" href="{{route('Route')}}">
+                            <i class="fa-solid fa-screwdriver-wrench"></i>
+                            <p>{{ __("Route") }}</p>
+                        </a>
+                    </li>
+
+                    <li class="nav-item @if($activePage == 'Mekanik') active @endif">
+                        <a class="nav-link" href="{{route('Mekanik')}}">
+                            <i class="fa-solid fa-screwdriver-wrench"></i>
+                            <p>{{ __("Mekanik") }}</p>
+                        </a>
+                    </li>
+
+                    <li class="nav-item @if($activePage == 'Supliers') active @endif">
+                        <a class="nav-link" href="{{ route('Supliers') }}">
+                            <i class="fa-solid fa-screwdriver-wrench"></i>
+                            <p>{{ __("Supliers") }}</p>
+                        </a>
+                    </li>
+
+                    </ul>
+                </div>
             </li>
             @endif
 
-            <li class="nav-item @if($activePage == 'Pengemudi') active @endif">
-                <a class="nav-link" href="{{route('Pengemudi')}}">
-                    <i class="fa-solid fa-screwdriver-wrench"></i>
-                    <p>{{ __("Pengemudi") }}</p>
-                </a>
-            </li>
 
-            <li class="nav-item @if($activePage == 'Route') active @endif">
-                <a class="nav-link" href="{{route('Route')}}">
-                    <i class="fa-solid fa-screwdriver-wrench"></i>
-                    <p>{{ __("Route") }}</p>
-                </a>
-            </li>
-
-            <li class="nav-item @if($activePage == 'Mekanik') active @endif">
-                <a class="nav-link" href="{{route('Mekanik')}}">
-                    <i class="fa-solid fa-screwdriver-wrench"></i>
-                    <p>{{ __("Mekanik") }}</p>
-                </a>
-            </li>
 
             @if(auth()->user()->hasAccessTo('Sparepart'))
             <li class="nav-item @if($activePage == 'Sparepart') active @endif">

@@ -15,6 +15,7 @@ class StockSparepart extends Model
         'sparepart_id',
         'gudang_id',
         'jumlah_stok',
+        'harga_satuan',
     ];
 
     public function sparepart()

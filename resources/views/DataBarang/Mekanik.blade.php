@@ -61,44 +61,49 @@
                                     <td>{{ $k->alamat }}</td>
                                     <td>{{ $k->gudang->nama_gudang }}</td>
                                     <td>
-                                        {{-- <form action="{{route('route.update',$r->id)}}" method="GET" style="display:inline;"data-toggle="modal" data-target="#editRouteModal{{ $r->id }}">
-                                            <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" >
-                                                    Edit
-                                            </button>
-                                         </form>
-                                        <form action="{{ route('route.destroy', $r->id) }}" method="POST" style="display:inline;">
+                                        <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#editMekanikModal{{ $k->id }}">
+                                            Edit
+                                        </button>
+                                        <form action="{{ route('mekanik.destroy', $k->id) }}" method="POST" style="display:inline;">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-sm btn-danger" style="margin-right: 8px;" onclick="return confirm('Apakah Anda yakin ingin menghapus Menu ini?')">Delete</button>
                                          </form>
-                                    </td> --}}
+                                    </td>
                                 </tr>
-                                {{-- <div class="modal fade" id="editRouteModal{{ $r->id }}" tabindex="-1" aria-hidden="true">
+                                <!-- Modal Edit Mekanik -->
+                                <div class="modal fade" id="editMekanikModal{{ $k->id }}" tabindex="-1" aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
-                                            <form method="POST" action="{{ route('route.update', $r->id) }}">
+                                            <form method="POST" action="{{ route('mekanik.update', $k->id) }}">
                                                 @csrf
                                                 @method('PUT')
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title">Edit Route</h5>
+                                                    <h5 class="modal-title">Edit Mekanik</h5>
                                                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                                                 </div>
                                                 <div class="modal-body">
                                                     <div class="form-group">
-                                                        <label>Kode Route</label>
-                                                        <input type="text" class="form-control" name="kode_route" value="{{ $r->kode_route }}" required>
+                                                        <label>Nama</label>
+                                                        <input type="text" class="form-control" name="nama" value="{{ $k->nama }}" required>
 
-                                                        <label class="mt-2">Nama Route</label>
-                                                        <input type="text" class="form-control" name="nama_route" value="{{ $r->nama_route }}" required>
+                                                        <label class="mt-2">NIP</label>
+                                                        <input type="text" class="form-control" name="nip" value="{{ $k->nip }}" required>
 
-                                                        <label class="mt-2">Asal</label>
-                                                        <input type="text" class="form-control" name="asal" value="{{ $r->asal }}" required>
+                                                        <label class="mt-2">No HP</label>
+                                                        <input type="text" class="form-control" name="no_hp" value="{{ $k->no_hp }}" required>
 
-                                                        <label class="mt-2">Tujuan</label>
-                                                        <input type="text" class="form-control" name="tujuan" value="{{ $r->tujuan }}" required>
+                                                        <label class="mt-2">Alamat</label>
+                                                        <textarea class="form-control" name="alamat" rows="2" required>{{ $k->alamat }}</textarea>
 
-                                                        <label class="mt-2">Jarak (km)</label>
-                                                        <input type="number" class="form-control" name="jarak_km" value="{{ $r->jarak_km }}">
+                                                        <label class="mt-2">Gudang</label>
+                                                        <select name="gudang_id" class="form-control" required>
+                                                            @foreach($gudang as $item)
+                                                                <option value="{{ $item->id }}" {{ $item->id == $k->gudang_id ? 'selected' : '' }}>
+                                                                    {{ $item->nama_gudang }}
+                                                                </option>
+                                                            @endforeach
+                                                        </select>
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">
@@ -108,8 +113,7 @@
                                             </form>
                                         </div>
                                     </div>
-                                </div> --}}
-
+                                </div>
                             @endforeach
                         </tbody>
                         </table>

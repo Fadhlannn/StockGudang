@@ -22,6 +22,8 @@ use App\Http\Controllers\MekanikController;
 use App\Http\Controllers\PengemudiController;
 use App\Http\Controllers\RouteController;
 use App\Http\Controllers\SpkController;
+use App\Http\Controllers\SupliersController;
+use App\Models\Mekanik;
 
 Route::get('/', [AuthController::class, 'pagelogin'])->name('login');
 Route::post('/', [AuthController::class, 'login']);
@@ -31,11 +33,6 @@ Route::post('/register', [RegisterController::class,'register']);
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/Welcome', [AdminController::class, 'Welcome'])->name('Welcome');
-});
-
-Route::middleware(['auth', role_menu::class . ':Dashboard'])->group(function () {
-    // Route::get('/Dashboard', [AdminController::class, 'Dashboard'])->name('Dashboard');
-    Route::get('/Dashboard', [DashboardController::class, 'index'])->name('dashboard');
 });
 
 Route::get('password/reset', [ResetPasswordController::class, 'showResetRequestForm'])->name('password.request');
@@ -81,11 +78,6 @@ Route::middleware(['auth', role_menu::class . ':Sparepart'])->group(function () 
 
 });
 
-Route::middleware(['auth', role_menu::class . ':Transaksi'])->group(function () {
-    Route::get('/transaksi', [TransaksiController::class, 'index'])->name('Transaksi');
-    Route::post('/transaksi', [TransaksiController::class, 'store'])->name('Transaksi.store');
-});
-
 Route::middleware(['auth', role_menu::class . ':Riwayat'])->group(function () {
     Route::get('/Riwayat', [RiwayatController::class, 'index'])->name('Riwayat');
     Route::get('/riwayat/export-pdf', [RiwayatController::class, 'exportPDF'])->name('riwayat.export-pdf');
@@ -100,6 +92,11 @@ Route::post('/DataMasuk', [DataMasukController::class, 'store'])->name('dataMasu
 Route::get('/DataMasuk/{dataMasuk}/edit', [DataMasukController::class, 'edit'])->name('dataMasuk.edit');
 Route::put('/DataMasuk/{dataMasuk}', [DataMasukController::class, 'update'])->name('dataMasuk.update');
 Route::delete('/DataMasuk/{dataMasuk}', [DataMasukController::class, 'destroy'])->name('dataMasuk.destroy');
+Route::get('/get-spareparts', [DataMasukController::class, 'getSpareparts'])->name('getSparepart');
+Route::get('/rekap-total-order/{no_order?}', [DataMasukController::class, 'rekapTotalOrder'])->name('rekapTotalOrder');
+;
+
+
 
 Route::get('/Spk',[SpkController::class,'index'])->name('Spk');
 Route::post('/Spk',[SpkController::class,'store'])->name('spk.store');
@@ -111,6 +108,7 @@ Route::get('/get-route-polisi', [SpkController::class, 'getRoutePolisi'])->name(
 
 Route::get('/spk/{id}/data-keluar', [DataKeluarController::class, 'dataKeluar'])->name('dataKeluar');
 Route::post('/spk/{spk}/data-keluar', [DataKeluarController::class, 'store'])->name('data-keluar.store');
+Route::get('/get-spareparts', [DataKeluarController::class, 'getSpareparts']);
 
 
 Route::get('/bus', [BusController::class, 'index'])->name('Bus');
@@ -132,3 +130,10 @@ Route::delete('/routes/{id}', [RouteController::class, 'destroy'])->name('route.
 
 Route::get('/Mekanik', [MekanikController::class, 'index'])->name('Mekanik');
 Route::post('/Mekanik', [MekanikController::class, 'store'])->name('mekanik.store');
+Route::put('/Mekanik/{id}', [MekanikController::class, 'update'])->name('mekanik.update');
+Route::delete('/Mekanik/{id}', [MekanikController::class, 'destroy'])->name('mekanik.destroy');
+
+Route::get('/Supliers', [SupliersController::class, 'index'])->name('Supliers');
+Route::post('/Supliers', [SupliersController::class, 'store'])->name('suplier.store');
+Route::put('/Supliers/{id}', [SupliersController::class, 'update'])->name('suplier.update');
+Route::delete('/Supliers/{id}', [SupliersController::class, 'destroy'])->name('suplier.destroy');
