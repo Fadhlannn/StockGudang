@@ -94,7 +94,6 @@
                             {{ session('error') }}
                         </div>
                     @endif
-                <div class="modal-body">
                     <div class="row mb-3">
                         <div class="col-md-4">
                             <label for="no_order" class="form-label">No Order</label>
@@ -115,8 +114,24 @@
                             <input type="text" class="form-control" value="{{ Auth::user()->name }}" disabled>
                             <input type="hidden" name="user_id" value="{{ Auth::id() }}">
                         </div>
-
+                           <div class="col-md-4">
+                        <label for="gudang_id" class="form-label">Gudang</label>
+                        <select class="form-select @error('gudang_id') is-invalid @enderror" id="gudang_id" name="gudang_id" required>
+                            <option value="">-- Pilih Gudang --</option>
+                            @foreach ($gudangs as $g)
+                                <option value="{{ $g->id }}" {{ old('gudang_id') == $g->id ? 'selected' : '' }}>{{ $g->nama_gudang }}</option>
+                            @endforeach
+                        </select>
+                        @error('gudang_id')
+                            <span class="invalid-feedback">{{ $message }}</span>
+                        @enderror
+                    </div>
                         <div class="col-md-4 mt-3">
+                            <label for="stok" class="form-label">Stok Saat Ini</label>
+                            <input type="number" class="form-control" id="stok" name="stok" readonly>
+                        </div>
+
+                         <div class="col-md-8 mt-3">
                             <label for="sparepart_id" class="form-label">Nama Barang</label>
                             <select class="form-control @error('sparepart_id') is-invalid @enderror"
                                     id="sparepart_id"
@@ -158,24 +173,9 @@
                             <label for="harga_satuan" class="form-label">Harga Satuan</label>
                             <input type="number" class="form-control" id="harga_satuan" name="harga_satuan" required>
                         </div>
-                        <div class="col-md-4">
-                            <label for="harga_standar" class="form-label">Harga Standar</label>
-                            <input type="number" class="form-control" id="harga_standar" name="harga_standar" readonly>
-                        </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label for="gudang_id" class="form-label">Gudang</label>
-                        <select class="form-select @error('gudang_id') is-invalid @enderror" id="gudang_id" name="gudang_id" required>
-                            <option value="">-- Pilih Gudang --</option>
-                            @foreach ($gudangs as $g)
-                                <option value="{{ $g->id }}" {{ old('gudang_id') == $g->id ? 'selected' : '' }}>{{ $g->nama_gudang }}</option>
-                            @endforeach
-                        </select>
-                        @error('gudang_id')
-                            <span class="invalid-feedback">{{ $message }}</span>
-                        @enderror
-                    </div>
+
 
                     <div class="mb-3">
                         <label for="keterangan" class="form-label">Keterangan</label>
@@ -193,127 +193,72 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
 <script>
- $(document).ready(function() {
-    // Reset Select2 dan harga saat modal ditutup
-    $('#modalTambahDataMasuk').on('hidden.bs.modal', function () {
-        $('#sparepart_id').val(null).trigger('change'); // Clear Select2
-        $('#harga_standar').val(''); // Reset harga
-    });
-
-    $('#modalTambahDataMasuk').on('shown.bs.modal', function () {
-        $('#sparepart_id').select2({
-            dropdownParent: $('#modalTambahDataMasuk'),
-            placeholder: '-- Pilih Barang --',
-            allowClear: true,
-            ajax: {
-                url: '{{ url("/get-spareparts") }}',
-                dataType: 'json',
-                delay: 250,
-                data: function (params) {
-                    return {
-                        q: params.term
-                    };
-                },
-                processResults: function (data) {
-                    return {
-                        results: data.map(function (item) {
-                            return {
-                                id: item.id,
-                                text: item.text,
-                                harga: item.harga
-                            };
-                        })
-                    };
-                },
-                cache: true
+$(document).ready(function () {
+    // Inisialisasi Select2 SEKALI saja (tidak perlu di dalam on('shown.bs.modal'))
+    $('#sparepart_id').select2({
+        placeholder: '-- Pilih Sparepart --',
+        allowClear: true,
+        width: '100%',
+        dropdownParent: $('#modalTambahDataMasuk'), // INI PENTING biar dropdown muncul dalam modal!
+        ajax: {
+            url: '{{ url("/datamasuk/get-spareparts") }}',
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+                return {
+                    q: params.term,
+                    gudang_id: $('#gudang_id').val()
+                };
             },
-        });
+            processResults: function (data) {
+                return {
+                    results: data.map(function (item) {
+                        return {
+                            id: item.id,
+                            text: item.text,
+                            harga: item.harga,
+                            stok: item.stok || 0
+                        };
+                    })
+                };
+            },
+            cache: true
+        },
+        templateResult: function (data) {
+            if (data.loading) return data.text;
+            return $('<span>').html(`<strong>${data.text}</strong>`);
+        },
+        templateSelection: function (data) {
+            return data.text;
+        }
     });
 
-    // Isi harga saat pilih sparepart
+    // Saat pilih sparepart, isi harga & stok
     $('#sparepart_id').on('select2:select', function (e) {
-        var data = e.params.data;
-        $('#harga_standar').val(data.harga);
+        const data = e.params.data;
+        $('#harga').val(data.harga);
+        $('#stok').val(data.stok || 0);
     });
 
-    // Kosongkan harga saat hapus pilihan
-    $('#sparepart_id').on('select2:clear', function (e) {
-        $('#harga_standar').val('');
+    // Jika dikosongkan
+    $('#sparepart_id').on('select2:clear', function () {
+        $('#harga').val('');
+        $('#stok').val('');
+    });
+
+    // Reset saat modal ditutup
+    $('#modalTambahDataMasuk').on('hidden.bs.modal', function () {
+        $('#sparepart_id').val(null).trigger('change');
+        $('#harga').val('');
+        $('#stok').val('');
     });
 });
 </script>
+@endpush
 
-{{-- @foreach ($dataMasuk as $t)
-<!-- Modal Edit -->
-<div class="modal fade" id="editModal{{ $t->id }}" tabindex="-1" aria-labelledby="editModalLabel{{ $t->id }}" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <form action="{{ route('dataMasuk.update', $t->id) }}" method="POST">
-                @csrf
-                @method('PUT')
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editModalLabel{{ $t->id }}">Edit Data Masuk</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row mb-3">
-                        <div class="col-md-4">
-                            <label for="no_order" class="form-label">No Order</label>
-                            <input type="number" class="form-control" name="no_order" value="{{ $t->no_order }}" required>
-                        </div>
-                        <div class="col-md-4">
-                            <label for="Tanggal_masuk" class="form-label">Tanggal Masuk</label>
-                            <input type="date" class="form-control" name="Tanggal_masuk" value="{{ $t->Tanggal_masuk }}" required>
-                        </div>
-                        <div class="col-md-4">
-                            <label for="sparepart_id" class="form-label">Nama Barang</label>
-                            <select class="form-select" name="sparepart_id" required>
-                                <option value="">-- Pilih Barang --</option>
-                                @foreach ($spareparts as $s)
-                                    <option value="{{ $s->id }}" {{ $s->id == $t->sparepart_id ? 'selected' : '' }}>{{ $s->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-4">
-                            <label for="jumlah" class="form-label">Jumlah</label>
-                            <input type="number" class="form-control" name="jumlah" value="{{ $t->jumlah }}" required>
-                        </div>
-                        <div class="col-md-4">
-                            <label for="supliers_id" class="form-label">Supplier</label>
-                            <select class="form-select" name="supliers_id" required>
-                                <option value="">-- Pilih Supplier --</option>
-                                @foreach ($supliers as $s)
-                                    <option value="{{ $s->id }}" {{ $s->id == $t->supliers_id ? 'selected' : '' }}>{{ $s->nama }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
 
-                    <div class="mb-3">
-                        <label for="gudang_id" class="form-label">Gudang</label>
-                        <select class="form-select" name="gudang_id" required>
-                            <option value="">-- Pilih Gudang --</option>
-                            @foreach ($gudangs as $g)
-                                <option value="{{ $g->id }}" {{ $g->id == $t->gudang_id ? 'selected' : '' }}>{{ $g->nama_gudang }}</option>
-                            @endforeach
-                        </select>
-                    </div>
 
-                    <div class="mb-3">
-                        <label for="keterangan" class="form-label">Keterangan</label>
-                        <textarea class="form-control" name="keterangan" rows="2">{{ $t->keterangan }}</textarea>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-primary">Update</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-@endforeach --}}
 @endsection

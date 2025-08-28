@@ -19,6 +19,7 @@ class DataKeluar extends Model
         'tanggal_keluar',
         'harga_satuan',
         'jumlah',
+        'user_id',
     ];
 
     // Relasi ke SPK
@@ -31,6 +32,10 @@ class DataKeluar extends Model
     public function sparepart()
     {
         return $this->belongsTo(Sparepart::class);
+    }
+      public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 
 }

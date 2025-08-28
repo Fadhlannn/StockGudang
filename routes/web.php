@@ -93,9 +93,8 @@ Route::post('/DataMasuk', [DataMasukController::class, 'store'])->name('dataMasu
 Route::get('/DataMasuk/{dataMasuk}/edit', [DataMasukController::class, 'edit'])->name('dataMasuk.edit');
 Route::put('/DataMasuk/{dataMasuk}', [DataMasukController::class, 'update'])->name('dataMasuk.update');
 Route::delete('/DataMasuk/{dataMasuk}', [DataMasukController::class, 'destroy'])->name('dataMasuk.destroy');
-Route::get('/get-spareparts', [DataMasukController::class, 'getSpareparts'])->name('getSparepart');
+Route::get('/datamasuk/get-spareparts', [DataMasukController::class, 'getSpareparts'])->name('getSparepart');
 Route::get('/rekap-total-order/{no_order?}', [DataMasukController::class, 'rekapTotalOrder'])->name('rekapTotalOrder');
-;
 
 
 
@@ -109,7 +108,8 @@ Route::get('/get-route-polisi', [SpkController::class, 'getRoutePolisi'])->name(
 
 Route::get('/spk/{id}/data-keluar', [DataKeluarController::class, 'dataKeluar'])->name('dataKeluar');
 Route::post('/spk/{spk}/data-keluar', [DataKeluarController::class, 'store'])->name('data-keluar.store');
-Route::get('/get-spareparts', [DataKeluarController::class, 'getSpareparts']);
+Route::delete('/data-keluar/{spk}/{id}', [DataKeluarController::class, 'destroy'])->name('data-keluar.destroy');
+Route::get('/datakeluar/get-spareparts', [DataKeluarController::class, 'getSpareparts']);
 
 
 Route::get('/bus', [BusController::class, 'index'])->name('Bus');

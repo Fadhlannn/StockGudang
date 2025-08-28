@@ -32,7 +32,6 @@
                 <th>Gudang</th>
                 <th>Jumlah Stok</th>
                 <th>Harga Standart</th>
-                <th>Harga Per Sparepart</th>
                 <th>Total Harga Stok</th>
             </tr>
         </thead>
@@ -43,10 +42,10 @@
                 <td>{{ ($stok->currentPage() - 1) * $stok->perPage() + $loop->iteration }}</td>
                 <td>{{ $item->nama_sparepart }}</td>
                 <td>{{ $item->nama_gudang }}</td>
-                <td>{{ $item->jumlah_stok }}</td>
+                <td>{{ $item->total_stok }}</td>
                 <td>Rp {{ number_format($item->harga_standart, 0, ',', '.') }}</td>
-                <td>Rp {{ number_format($item->harga_satuan, 0, ',', '.') }}</td>
-                <td>Rp {{ number_format($item->harga_satuan * $item->jumlah_stok, 0, ',', '.') }}</td>
+                {{-- <td>Rp {{ number_format($item->harga_satuan, 0, ',', '.') }}</td> --}}
+                <td>Rp {{ number_format($item->harga_standart * $item->total_stok, 0, ',', '.') }}</td>
             </tr>
             @endforeach
         </tbody>

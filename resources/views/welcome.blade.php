@@ -1,12 +1,19 @@
-@extends('layouts/app', ['activePage' => 'welcome', 'title' => 'Light Bootstrap Dashboard Laravel by Creative Tim & UPDIVISION'])
+@extends('layouts/app', [
+    'activePage' => 'welcome',
+    'title' => 'Welcome'
+])
 
 @section('content')
-    <div class="full-page section-image" data-color="black" data-image="{{asset('light-bootstrap/img/full-screen-image-2.jpg')}}">
+    <div class="full-page section-image"
+         data-color="black"
+         data-image="{{ asset('light-bootstrap/img/gambar_primajasa.jpg') }}">
         <div class="content">
-            <div class="container">
+            <div class="container text-center mt-5">
                 <div class="row justify-content-center">
-                    <div class="col-lg-7 col-md-8">
-                        <h1 class="text-white text-center">{{ __('Welcome to Light Bootstrap Dashboard FREE Laravel Live Preview.') }}</h1>
+                    <div class="col-lg-8 col-md-10">
+                        <h1 class="text-white text-center">
+                            {{ __('Selamat Datang Di Stok Gudang Primajasa') }}
+                        </h1>
                     </div>
                 </div>
             </div>
@@ -16,13 +23,13 @@
 
 @push('js')
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             demo.checkFullPageBackgroundImage();
 
-            setTimeout(function() {
-                // after 1000 ms we add the class animated to the login/register card
+            setTimeout(function () {
+                // After 700 ms we remove the 'card-hidden' class from any card
                 $('.card').removeClass('card-hidden');
-            }, 700)
+            }, 700);
         });
     </script>
 @endpush

@@ -74,7 +74,11 @@ class User extends Authenticatable
     }
     public function spk()
     {
-        return $this->belongsTo(DataMasuk::class);
+        return $this->belongsTo(Spk::class);
+    }
+     public function DataKeluar()
+    {
+        return $this->belongsTo(DataKeluar::class);
     }
 
 }

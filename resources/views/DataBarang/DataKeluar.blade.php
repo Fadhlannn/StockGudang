@@ -79,23 +79,28 @@
                 <form action="{{ route('data-keluar.store', $spk->id) }}" method="POST">
                     @csrf
                     <div class="form-group">
+                         <input type="hidden" id="gudang_id" value="{{ $spk->gudang_id }}">
+                    </div>
+
+                    <div class="form-group">
                         <label for="sparepart_id">Nama Sparepart</label>
                         <select name="sparepart_id" id="sparepart_id" class="form-control" style="width: 100%"></select>
                     </div>
+                     <div class="form-group">
+                            <label class="form-label">Penginput</label>
+                            <input type="text" class="form-control" value="{{ Auth::user()->name }}" disabled>
+                            <input type="hidden" name="user_id" value="{{ Auth::id() }}">
+                        </div>
                     <div class="form-group mt-2">
                         <label for="jumlah">Jumlah</label>
                         <input type="number" name="jumlah" class="form-control" required>
                     </div>
-                    <div class="col-md-4">
-                        <label for="harga_standar_out" class="form-label">Harga Standar</label>
-                        <input type="number" class="form-control" id="harga_standar_out" name="harga_standar_out" readonly>
-                    </div>
                     <div class="form-group mt-2">
                         <label for="tanggal_keluar">Tanggal Keluar</label>
-                        <input type="date" name="tanggal_keluar" class="form-control" required>
+                        <input type="date" name="tanggal_keluar" class="form-control"value="{{ date('Y-m-d') }}" readonly required>
                     </div>
                     <button type="submit" class="btn btn-primary mt-3">Simpan</button>
-                    <a href="{{ route('dataKeluar', $spk->id) }}" class="btn btn-secondary mt-3">Kembali</a>
+                    <a href="{{ route('Spk') }}" class="btn btn-secondary mt-3">Kembali</a>
                 </form>
                 <div class="container mt-4">
     <h4>Riwayat Data Keluar - SPK {{ $spk->nomor_spk }}</h4>
@@ -110,10 +115,13 @@
                         <tr>
                             <th>No</th>
                             <th>Nama Sparepart</th>
+                            <th>Harga Standart</th>
                             <th>Jumlah</th>
                             <th>Harga Satuan</th>
                             <th>Total Harga</th>
                             <th>Tanggal Keluar</th>
+                            <th>Penginput</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -121,10 +129,20 @@
                         <tr>
                             <td>{{ $index + 1 }}</td>
                             <td>{{ $item->sparepart->name }}</td>
+                            <td>Rp {{number_format( $item->sparepart->harga,0,',','.')}}</td>
                             <td>{{ $item->jumlah }}</td>
                             <td>Rp {{ number_format($item->harga_satuan, 0, ',', '.') }}</td>
                             <td>Rp {{ number_format($item->jumlah * $item->harga_satuan, 0, ',', '.') }}</td>
                             <td>{{ $item->tanggal_keluar }}</td>
+                            <td>{{$item->user->name ?? '-'}}</td>
+                            <td>
+                                <form action="{{ route('data-keluar.destroy',  ['spk' => $spk->id, 'id' => $item->id]) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus data ini?')">
+                                        @csrf
+                                        @method('DELETE')
+                                    <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                                </form>
+                            </td>
+
                         </tr>
                         @endforeach
                         <tr>
@@ -149,12 +167,13 @@ $(document).ready(function() {
         placeholder: '-- Pilih Sparepart --',
         allowClear: true,
         ajax: {
-            url: '{{ url("/get-spareparts") }}',
+            url: '{{ url("/datakeluar/get-spareparts") }}',
             dataType: 'json',
             delay: 250,
             data: function (params) {
                 return {
-                    q: params.term // keyword pencarian
+                    q: params.term,
+                    gudang_id: $('#gudang_id').val()
                 };
             },
             processResults: function (data) {
@@ -163,24 +182,12 @@ $(document).ready(function() {
                         return {
                             id: item.id,
                             text: item.text,
-                            harga: item.harga
                         };
                     })
                 };
             },
             cache: true
         }
-    });
-
-    // Update harga standar saat memilih sparepart
-    $('#sparepart_id').on('select2:select', function (e) {
-        var data = e.params.data; // data yang dipilih
-        $('#harga_standar_out').val(data.harga); // Set harga di input harga_standar_out
-    });
-
-    // Reset harga jika tidak ada pilihan
-    $('#sparepart_id').on('select2:clear', function () {
-        $('#harga_standar_out').val('');
     });
 });
 
